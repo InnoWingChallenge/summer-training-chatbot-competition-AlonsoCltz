@@ -1,3 +1,9 @@
 python-dotenv
 openai
 chromadb
+bs4
+requests
+dotenv
+langchain
+chromadb
+langchain-text-splitters
