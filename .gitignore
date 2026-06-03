@@ -1,4 +1,8 @@
 .env
+<<<<<<< HEAD
 .venv/
 venv/
 __pycache__/
+=======
+.venv/
+>>>>>>> origin/main

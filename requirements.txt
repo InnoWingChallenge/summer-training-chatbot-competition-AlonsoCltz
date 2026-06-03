@@ -1,9 +1,12 @@
 python-dotenv
 openai
 chromadb
+<<<<<<< HEAD
 bs4
 requests
 dotenv
 langchain
 chromadb
 langchain-text-splitters
+=======
+>>>>>>> origin/main
