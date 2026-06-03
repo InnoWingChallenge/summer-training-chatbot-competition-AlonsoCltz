@@ -97,11 +97,12 @@ class WebScraper:
 def test_scraper():
     scraper = WebScraper()
     scraper.crawl()
+    scraper.save_data()
     print(scraper.documents)
 
 if __name__ == "__main__":
-    scraper = WebScraper()
-    scraper.crawl()
-    scraper.save_data()
-    #test_scraper()
+    #scraper = WebScraper()
+    #scraper.crawl()
+    #scraper.save_data()
+    test_scraper()
 

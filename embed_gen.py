@@ -63,7 +63,7 @@ for doc in documents:
 
 print(f"Created {len(all_texts)} chunks from {len(documents)} documents.")
 
-API_Key = os.getenv("AZURE_OPENAI_API_KEY_2")
+API_Key = os.getenv("AZURE_OPENAI_API_KEY")
 if not API_Key:
     raise RuntimeError("Missing Azure OpenAI credentials.")
 
