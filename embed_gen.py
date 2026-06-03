@@ -32,7 +32,7 @@ class EmbeddingConfig:
     @classmethod
     def from_env(cls) -> "EmbeddingConfig":
         """Create config from environment variables, loading .env from the parent folder."""
-        base_dir = Path.cwd().parent
+        base_dir = Path(__file__).resolve().parent
         load_dotenv(base_dir / ".env")
 
         return cls(
