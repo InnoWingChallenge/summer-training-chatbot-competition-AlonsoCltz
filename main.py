@@ -10,6 +10,8 @@ import chromadb
 from dotenv import load_dotenv
 from openai import AzureOpenAI
 
+import json
+
 
 @dataclass(frozen=True)
 class RAGConfig:
@@ -205,6 +207,36 @@ class ChromaRetriever:
                 )
         return retrieved
 
+class JsonHandler:
+    @staticmethod
+    def load_questions_from_json(path: Path) -> List[str]:
+        """Load questions from a JSON file.
+
+        Expected format:
+            [
+                "Question 1?",
+                "Question 2?"
+            ]
+        """
+        if not path.exists():
+            raise FileNotFoundError(f"Questions file not found: {path}")
+
+        with path.open("r", encoding="utf-8") as file:
+            questions = json.load(file)
+
+        if not isinstance(questions, list):
+            raise ValueError("questions.json must contain a JSON list of strings.")
+
+        cleaned_questions = [
+            question.strip()
+            for question in questions
+            if isinstance(question, str) and question.strip()
+        ]
+
+        if not cleaned_questions:
+            raise ValueError("questions.json does not contain any valid questions.")
+
+        return cleaned_questions
 
 class ContextBuilder:
     """Formats retrieved chunks into a compact context block for the LLM."""
@@ -355,9 +387,16 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Command-line entry point."""
     args = parse_args()
-    questions = args.questions or ["What is the Innovation Academy?"]
 
-    app = RAGApplication(RAGConfig.from_env())
+    config = RAGConfig.from_env()
+    app = RAGApplication(config)
+
+    questions = args.questions
+
+    if not questions:
+        questions_path = config.base_dir / "questions.json"
+        questions = JsonHandler.load_questions_from_json(questions_path)
+
     for question, answer in app.answer_questions(questions):
         print(f"\nQ: {question}")
         print(f"A: {answer}")
