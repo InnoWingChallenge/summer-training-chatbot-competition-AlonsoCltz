@@ -12,6 +12,22 @@ import re
 import mimetypes
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+# Tags that are NEVER meaningful content — strip them unconditionally
+NOISE_TAGS = [
+    "script", "style", "nav", "header", "footer",
+    "aside", "form", "noscript", "iframe",
+    "button", "svg", "figure",
+]
+
+# CSS class/id selectors that commonly wrap navigation or boilerplate
+NOISE_SELECTORS = [
+    ".nav", ".navbar", ".menu", ".sidebar",
+    ".footer", ".cookie", ".breadcrumb",
+    ".social", ".share", ".advertisement",
+    "#nav", "#header", "#footer", "#sidebar",
+]
+# ─────────────────────────────────────────────────────────────────────────────
+
 class WebScraper:
     def __init__(self):
         self.BASE_DIR = Path.cwd().parent
@@ -25,8 +41,8 @@ class WebScraper:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                           "(KHTML, like Gecko) Chrome/133.0 Safari/537.36"
         }
-        self.MAX_PAGES = 20          # Safety limit - increase if needed
-        self.DELAY = 1.0              # Seconds between requests (polite enough for this small site)
+        self.MAX_PAGES = 50          # Safety limit - increase if needed
+        self.DELAY = 0.5              # Seconds between requests (polite enough for this small site)
         self.visited: List[str] = []
         self.queue: List[str] = self.SEED_URLS[:]
         self.documents: List[Dict[str, str]] = []
@@ -116,65 +132,107 @@ class WebScraper:
         parsed = urlparse(url)
         return parsed.netloc in self.ALLOWED_DOMAINS or not parsed.netloc  # allow relative links
 
-    # Performs the most basic cleaning: removes only JavaScript and CSS, then extracts readable text while reducing extra blank lines.
-    def simple_clean_text(self, soup: BeautifulSoup) -> str:
-        # Very basic cleaning - remove script/style only
-        for tag in soup(["script", "style"]):
+        # ── CHANGED: simple_clean_text() replaced with clean_html() ──────────────
+    def clean_html(self, soup: BeautifulSoup) -> str:
+        """
+        Extract clean text from a BeautifulSoup object.
+        Strategy:
+          1. Remove universally noisy tags (nav, footer, header, etc.)
+          2. Remove elements matching known noise CSS selectors.
+          3. Isolate the main content zone using semantic HTML.
+          4. Fall back to <body> if no semantic container is found.
+          5. Drop lines shorter than 20 chars (likely menu remnants).
+        """
+        # Step 1 — strip noisy tags in-place
+        for tag in soup(NOISE_TAGS):
             tag.decompose()
-        text = soup.get_text(separator="\n", strip=True)
-        # Remove excessive blank lines
-        lines = [line.strip() for line in text.splitlines() if line.strip()]
-        return "\n".join(lines)
 
-    # Downloads a single page and returns a dictionary containing the URL and its cleaned text (or an error message)
-    def scrape_page(self, url: str) -> Dict[str, str]:
+        # Step 2 — strip elements identified by CSS class/id
+        for selector in NOISE_SELECTORS:
+            for el in soup.select(selector):
+                el.decompose()
+
+        # Step 3 — target the main content zone
+        content = (
+            soup.find("main")
+            or soup.find("article")
+            or soup.find(attrs={"role": "main"})
+            or soup.find("div", class_=lambda c: c and any(
+                kw in c.lower() for kw in
+                ["content", "post-body", "entry", "article-body", "page-content"]
+            ))
+        )
+
+        # Step 4 — fall back to body if no semantic zone found
+        target = content or soup.find("body") or soup
+
+        # Step 5 — extract and filter text
+        raw = target.get_text(separator="\n", strip=True)
+        lines = [line.strip() for line in raw.splitlines() if line.strip()]
+        lines = [l for l in lines if len(l) >= 20]
+
+        return "\n".join(lines)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    # ── CHANGED: returns (doc, soup) to avoid second HTTP request ─────────────
+    def scrape_page(self, url: str) -> tuple[Dict[str, str]]:
+        """
+        Fetch a page and return both the cleaned text dict AND the soup object.
+        Returning soup lets crawl() extract links without a second HTTP request.
+        """
         try:
             resp = requests.get(url, headers=self.HEADERS, timeout=15)
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, "html.parser")
-            self.queue_image_downloads(soup, url)
-            text = self.simple_clean_text(soup)
-            return {"url": url, "text": text}
+            self.queue_image_downloads(soup, url)   # ← image logic unchanged
+            text = self.clean_html(soup)             # ← uses new cleaner
+            return {"url": url, "text": text}, soup
         except Exception as e:
             print(f"❌ Failed {url}: {e}")
-            return {"url": url, "text": f"[ERROR: {e}]"}
+            return {"url": url, "text": f"[ERROR: {e}]"}, None
+    # ─────────────────────────────────────────────────────────────────────────
 
+    # ── CHANGED: reuses soup from scrape_page() — single request per page ─────
     def crawl(self):
         print("🚀 Starting crawling...\n")
-        
+
         while self.queue and len(self.documents) < self.MAX_PAGES:
             url = self.queue.pop(0)
             if url in self.visited:
                 continue
 
             print(f"📄 [{len(self.documents)+1}/{self.MAX_PAGES}] Scraping → {url}")
-            doc = self.scrape_page(url)
-            
+
+            # One request per page — soup reused for link extraction below
+            doc, soup = self.scrape_page(url)
+
             if doc["text"].strip():
                 self.documents.append(doc)
-            
+
             self.visited.append(url)
 
-            try:
-                resp = requests.get(url, headers=self.HEADERS, timeout=10)
-                soup = BeautifulSoup(resp.text, "html.parser")
-                for a in soup.find_all("a", href=True):
-                    full_url = urljoin(url, a["href"])
-                    if self.is_internal_link(full_url) and full_url not in self.visited:
-                        self.queue.append(full_url)
-            except:
-                pass  # ignore link extraction errors
+            # Reuse the soup we already have — no second HTTP request needed
+            if soup is not None:
+                try:
+                    for a in soup.find_all("a", href=True):
+                        full_url = urljoin(url, a["href"])
+                        if self.is_internal_link(full_url) and full_url not in self.visited:
+                            self.queue.append(full_url)
+                except Exception:
+                    pass
 
             time.sleep(self.DELAY)
-        
+
+        # ── UNCHANGED: image download wait logic ─────────────────────────────
         if self.image_futures:
             print("\n⏳ Waiting for image downloads to finish...")
             for future in as_completed(self.image_futures):
                 future.result()
             self.image_executor.shutdown(wait=True)
-
+        # ─────────────────────────────────────────────────────────────────────
 
         print(f"\n✅ Crawl finished! Collected {len(self.documents)} pages.")
+    # ─────────────────────────────────────────────────────────────────────────
 
     def save_data(self):
         load_dotenv("../.env")
@@ -198,4 +256,3 @@ if __name__ == "__main__":
     #scraper.crawl()
     #scraper.save_data()
     test_scraper()
-
