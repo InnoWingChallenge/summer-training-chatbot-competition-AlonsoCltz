@@ -7,6 +7,7 @@ import os
 from typing import List, Dict
 from pathlib import Path
 from dotenv import load_dotenv
+from collections import Counter
 
 import re
 import mimetypes
@@ -28,9 +29,19 @@ NOISE_SELECTORS = [
 ]
 # ─────────────────────────────────────────────────────────────────────────────
 
+BLOCKLIST_EXACT = {
+    "Skip to content","Main Menu","Menu Toggle","Home","About us","Programmes and activities","Workshop","Sharing","Pitching","Student-initiated courses","Study Tour","Inno Show and Carnivals","Robot Arm Challenge 2026","Student Development Projects","Funding Scheme","Internship Opportunities","Innovation Wing","Previous","Next","Previous image","Next image","Learn more","Learn More","Learn More »","Read More »","Click Here","Contact Us","Be our member!","Register",".",
+}
+
+# ── Prefix blocklist — strip lines starting with these strings ───────────────
+BLOCKLIST_PREFIXES = (
+    "Copyright ©️",
+    "For inquiries",
+)
+
 class WebScraper:
     def __init__(self):
-        self.BASE_DIR = Path.cwd().parent
+        self.BASE_DIR = Path(__file__).resolve().parent
         self.SEED_URLS = [
             "https://innowings.engg.hku.hk/",
             "https://innoacademy.engg.hku.hk/",
@@ -136,43 +147,39 @@ class WebScraper:
     def clean_html(self, soup: BeautifulSoup) -> str:
         """
         Extract clean text from a BeautifulSoup object.
-        Strategy:
-          1. Remove universally noisy tags (nav, footer, header, etc.)
-          2. Remove elements matching known noise CSS selectors.
-          3. Isolate the main content zone using semantic HTML.
-          4. Fall back to <body> if no semantic container is found.
-          5. Drop lines shorter than 20 chars (likely menu remnants).
+
+        These sites do NOT use semantic HTML (<main>, <article>, <nav>),
+        so DOM-based isolation doesn't work. Strategy instead:
+          1. Strip known noise tags where they exist.
+          2. Extract all body text.
+          3. Filter lines using an exact blocklist + prefix blocklist + length floor.
         """
-        # Step 1 — strip noisy tags in-place
+        # Step 1 — strip noisy tags where they do exist
         for tag in soup(NOISE_TAGS):
             tag.decompose()
-
-        # Step 2 — strip elements identified by CSS class/id
         for selector in NOISE_SELECTORS:
             for el in soup.select(selector):
                 el.decompose()
 
-        # Step 3 — target the main content zone
-        content = (
-            soup.find("main")
-            or soup.find("article")
-            or soup.find(attrs={"role": "main"})
-            or soup.find("div", class_=lambda c: c and any(
-                kw in c.lower() for kw in
-                ["content", "post-body", "entry", "article-body", "page-content"]
-            ))
-        )
-
-        # Step 4 — fall back to body if no semantic zone found
-        target = content or soup.find("body") or soup
-
-        # Step 5 — extract and filter text
+        # Step 2 — fall back to full body (semantic zones don't exist here)
+        target = soup.find("body") or soup
         raw = target.get_text(separator="\n", strip=True)
-        lines = [line.strip() for line in raw.splitlines() if line.strip()]
-        lines = [l for l in lines if len(l) >= 20]
 
-        return "\n".join(lines)
-    # ─────────────────────────────────────────────────────────────────────────
+        # Step 3 — filter line by line
+        clean_lines = []
+        for line in raw.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            if line in BLOCKLIST_EXACT:           # exact nav/boilerplate match
+                continue
+            if line.startswith(BLOCKLIST_PREFIXES):  # copyright / contact footer
+                continue
+            if len(line) < 20:                    # too short to be real content
+                continue
+            clean_lines.append(line)
+
+        return "\n".join(clean_lines)
 
     # ── CHANGED: returns (doc, soup) to avoid second HTTP request ─────────────
     def scrape_page(self, url: str) -> tuple[Dict[str, str]]:
@@ -192,7 +199,47 @@ class WebScraper:
             return {"url": url, "text": f"[ERROR: {e}]"}, None
     # ─────────────────────────────────────────────────────────────────────────
 
-    # ── CHANGED: reuses soup from scrape_page() — single request per page ─────
+    def deduplicate_across_pages(self, threshold: float = 0.4):
+        """
+        Remove lines that appear in more than `threshold` fraction of all pages.
+        This catches boilerplate the blocklist missed — any line on 40%+ of pages
+        is structural noise, not content.
+
+        Call this AFTER crawl() completes, before save_data().
+        """
+        if not self.documents:
+            return
+
+        total_pages = len(self.documents)
+        cutoff = max(2, int(total_pages * threshold))  # at least 2 pages
+
+        # Count how many pages each line appears on
+        line_page_count = Counter()
+        for doc in self.documents:
+            # Use a set — count each line once per page, not per occurrence
+            for line in set(doc["text"].splitlines()):
+                line_page_count[line.strip()] += 1
+
+        # Build the boilerplate set
+        boilerplate = {
+            line for line, count in line_page_count.items()
+            if count >= cutoff
+        }
+
+        print(f"\n🧹 Cross-page dedup: found {len(boilerplate)} boilerplate lines "
+              f"(appear on {cutoff}+ of {total_pages} pages)")
+
+        # Strip boilerplate lines from every document
+        cleaned = 0
+        for doc in self.documents:
+            original_lines = doc["text"].splitlines()
+            filtered = [l for l in original_lines if l.strip() not in boilerplate]
+            if len(filtered) < len(original_lines):
+                cleaned += 1
+            doc["text"] = "\n".join(filtered)
+
+        print(f"   Applied to {cleaned} pages.")    
+
     def crawl(self):
         print("🚀 Starting crawling...\n")
 
@@ -202,8 +249,6 @@ class WebScraper:
                 continue
 
             print(f"📄 [{len(self.documents)+1}/{self.MAX_PAGES}] Scraping → {url}")
-
-            # One request per page — soup reused for link extraction below
             doc, soup = self.scrape_page(url)
 
             if doc["text"].strip():
@@ -211,7 +256,6 @@ class WebScraper:
 
             self.visited.append(url)
 
-            # Reuse the soup we already have — no second HTTP request needed
             if soup is not None:
                 try:
                     for a in soup.find_all("a", href=True):
@@ -223,16 +267,16 @@ class WebScraper:
 
             time.sleep(self.DELAY)
 
-        # ── UNCHANGED: image download wait logic ─────────────────────────────
         if self.image_futures:
             print("\n⏳ Waiting for image downloads to finish...")
             for future in as_completed(self.image_futures):
                 future.result()
             self.image_executor.shutdown(wait=True)
-        # ─────────────────────────────────────────────────────────────────────
+
+        # ── NEW: strip cross-page boilerplate after all pages are collected ──
+        self.deduplicate_across_pages(threshold=0.4)
 
         print(f"\n✅ Crawl finished! Collected {len(self.documents)} pages.")
-    # ─────────────────────────────────────────────────────────────────────────
 
     def save_data(self):
         load_dotenv("../.env")
