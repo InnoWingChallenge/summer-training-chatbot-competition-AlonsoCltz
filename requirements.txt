@@ -7,3 +7,5 @@ dotenv
 langchain
 chromadb
 langchain-text-splitters
+easyocr
+pillow
