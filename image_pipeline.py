@@ -48,7 +48,7 @@ from photo_processing import PhotoProcessor      # EasyOCR (teammate's implement
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 SCRAPED_IMAGE_DIR = BASE_DIR / "pictures"        # web_scrape.py dumps images here
-PHONE_IMAGE_DIR   = BASE_DIR / "pictures" / "phone"  # manually added phone photos
+PHONE_IMAGE_DIR   = BASE_DIR / "selfTakenPictures"  # manually added phone photos
 DATA_JSON_PATH    = BASE_DIR / "data.json"
 PROCESSED_LOG     = BASE_DIR / ".processed_images"  # tracks already-processed filenames
 
