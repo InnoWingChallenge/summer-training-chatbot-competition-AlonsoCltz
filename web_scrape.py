@@ -182,7 +182,7 @@ class WebScraper:
         return "\n".join(clean_lines)
 
     # ── CHANGED: returns (doc, soup) to avoid second HTTP request ─────────────
-    def scrape_page(self, url: str) -> tuple[Dict[str, str]]:
+    def scrape_page(self, url: str) -> tuple:  # returns (dict, BeautifulSoup | None)
         """
         Fetch a page and return both the cleaned text dict AND the soup object.
         Returning soup lets crawl() extract links without a second HTTP request.

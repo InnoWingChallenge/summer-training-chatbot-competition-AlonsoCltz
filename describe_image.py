@@ -10,7 +10,10 @@ load_dotenv()
 
 API_Key = os.getenv("AZURE_OPENAI_API_KEY")
 AZURE_ENDPOINT = os.getenv("AZURE_OPENAI_AZURE_ENDPOINT") or os.getenv("AZURE_OPENAI_API_URL")
+# Default chat/vision model — override via AZURE_OPENAI_MODEL or pass model= to describe_image()
 MODEL = os.getenv("AZURE_OPENAI_MODEL") or "gpt-4o-mini"
+# Vision model for image inputs — competition instructions require GPT-5-mini
+VISION_MODEL = os.getenv("AZURE_OPENAI_VISION_MODEL") or MODEL
 
 if not API_Key:
     raise RuntimeError("Missing Azure OpenAI credentials. Set AZURE_OPENAI_API_KEY in .env or environment.")
@@ -25,11 +28,30 @@ def _image_to_data_url(path: str) -> str:
     return f"data:{mime};base64,{b64}"
 
 
-def describe_image(image_path: Optional[str] = None, image_url: Optional[str] = None) -> str:
-    """Return a short description for the image at `image_path` or `image_url`.
+_DEFAULT_PROMPT = (
+    "Please provide a concise description of the above image in 2-3 sentences. "
+    "Mention visible objects, prominent colors, and the overall mood. "
+    "Return only the description text."
+)
 
-    If `image_path` is provided it will be encoded as a data URL and sent inline.
+
+def describe_image(
+    image_path: Optional[str] = None,
+    image_url: Optional[str] = None,
+    model: Optional[str] = None,
+    prompt: Optional[str] = None,
+) -> str:
+    """Return a description for the image at `image_path` or `image_url`.
+
+    Args:
+        image_path: Local file path — encoded as a data URL and sent inline.
+        image_url:  Public URL — sent directly to the model.
+        model:      Override the default vision model (AZURE_OPENAI_VISION_MODEL).
+        prompt:     Override the default description prompt.
     """
+    active_model = model or VISION_MODEL
+    active_prompt = prompt or _DEFAULT_PROMPT
+
     client = AzureOpenAI(azure_endpoint=AZURE_ENDPOINT, api_key=API_Key, api_version="2025-01-01-preview")
 
     if image_path:
@@ -45,19 +67,12 @@ def describe_image(image_path: Optional[str] = None, image_url: Optional[str] = 
             "role": "user",
             "content": [
                 {"type": "input_image", "image_url": img_ref},
-                {
-                    "type": "input_text",
-                    "text": (
-                        "Please provide a concise description of the above image in 2-3 sentences. "
-                        "Mention visible objects, prominent colors, and the overall mood. "
-                        "Return only the description text."
-                    ),
-                },
+                {"type": "input_text", "text": active_prompt},
             ],
         }
     ]
 
-    resp = client.responses.create(model=MODEL, input=input_payload, max_output_tokens=500)
+    resp = client.responses.create(model=active_model, input=input_payload, max_output_tokens=500)
 
     # Prefer `output_text` if present, otherwise try to extract text content from structured output.
     if hasattr(resp, "output_text") and getattr(resp, "output_text"):
