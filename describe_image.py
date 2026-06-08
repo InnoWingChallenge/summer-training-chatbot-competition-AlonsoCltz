@@ -9,16 +9,21 @@ from openai import AzureOpenAI
 load_dotenv()
 
 API_Key = os.getenv("AZURE_OPENAI_API_KEY")
-AZURE_ENDPOINT = os.getenv("AZURE_OPENAI_AZURE_ENDPOINT") or os.getenv("AZURE_OPENAI_API_URL")
-# Default chat/vision model — override via AZURE_OPENAI_MODEL or pass model= to describe_image()
-MODEL = os.getenv("AZURE_OPENAI_MODEL") or "gpt-4o-mini"
+AZURE_ENDPOINT = os.getenv("AZURE_OPENAI_IMAGE_ENDPOINT") or os.getenv("AZURE_OPENAI_CHAT_ENDPOINT")
+AZURE_API_VERSION = os.getenv("AZURE_OPENAI_IMAGE_API_VERSION", "2025-01-01-preview")
 # Vision model for image inputs — competition instructions require GPT-5-mini
-VISION_MODEL = os.getenv("AZURE_OPENAI_VISION_MODEL") or MODEL
+VISION_MODEL = (
+    os.getenv("AZURE_OPENAI_IMAGE_MODEL")
+    or os.getenv("AZURE_OPENAI_VISION_MODEL")
+    or "gpt-5-mini"
+)
 
 if not API_Key:
     raise RuntimeError("Missing Azure OpenAI credentials. Set AZURE_OPENAI_API_KEY in .env or environment.")
 if not AZURE_ENDPOINT:
-    raise RuntimeError("Missing Azure OpenAI endpoint. Set AZURE_OPENAI_AZURE_ENDPOINT or AZURE_OPENAI_API_URL.")
+    raise RuntimeError(
+        "Missing Azure OpenAI image endpoint. Set AZURE_OPENAI_IMAGE_ENDPOINT or AZURE_OPENAI_CHAT_ENDPOINT in .env or environment."
+    )
 
 
 def _image_to_data_url(path: str) -> str:
@@ -52,8 +57,11 @@ def describe_image(
     active_model = model or VISION_MODEL
     active_prompt = prompt or _DEFAULT_PROMPT
 
-    client = AzureOpenAI(azure_endpoint=AZURE_ENDPOINT, api_key=API_Key, api_version="2025-01-01-preview")
-
+    client = AzureOpenAI(
+        base_url=f"{AZURE_ENDPOINT}/deployments/{active_model}",
+        api_key=API_Key,
+        api_version=AZURE_API_VERSION,
+    )
     if image_path:
         img_ref = _image_to_data_url(image_path)
     elif image_url:
@@ -61,42 +69,23 @@ def describe_image(
     else:
         raise ValueError("Provide either image_path or image_url")
 
-    # Construct a multimodal `input` with an image then a text instruction.
-    input_payload = [
+    messages = [
         {
             "role": "user",
             "content": [
-                {"type": "input_image", "image_url": img_ref},
-                {"type": "input_text", "text": active_prompt},
+                {"type": "image_url", "image_url": {"url": img_ref}},
+                {"type": "text", "text": active_prompt},
             ],
         }
     ]
 
-    resp = client.responses.create(model=active_model, input=input_payload, max_output_tokens=500)
+    resp = client.chat.completions.create(
+        model=active_model,
+        messages=messages,
+        max_completion_tokens=500,
+    )
 
-    # Prefer `output_text` if present, otherwise try to extract text content from structured output.
-    if hasattr(resp, "output_text") and getattr(resp, "output_text"):
-        return resp.output_text
-
-    # Attempt to extract from resp.output (various SDK shapes)
-    try:
-        parts = []
-        for item in getattr(resp, "output", []) or []:
-            if isinstance(item, dict):
-                for c in item.get("content", []) or []:
-                    if isinstance(c, dict) and c.get("type") in ("output_text", "text"):
-                        parts.append(c.get("text") or c.get("content") or "")
-                    elif isinstance(c, str):
-                        parts.append(c)
-            elif isinstance(item, str):
-                parts.append(item)
-        if parts:
-            return "\n".join([p for p in parts if p])
-    except Exception:
-        pass
-
-    # Fallback: return the raw response representation
-    return str(resp)
+    return resp.choices[0].message.content or ""
 
 
 if __name__ == "__main__":
