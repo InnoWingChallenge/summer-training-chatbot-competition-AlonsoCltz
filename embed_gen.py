@@ -48,7 +48,7 @@ class EmbeddingConfig:
             azure_api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2024-10-21"),
             collection_name=os.getenv("CHROMA_COLLECTION_NAME", "Innowing_db"),
             source_name=os.getenv("SOURCE_NAME", "HKU InnoWings / InnoAcademy"),
-            chunk_size=int(os.getenv("CHUNK_SIZE", "1000")),
+            chunk_size=int(os.getenv("CHUNK_SIZE", "1500")),
             batch_size=int(os.getenv("BATCH_SIZE", "150")),
             fresh_ingest=os.getenv("FRESH_INGEST", "true").lower() in {"1", "true", "yes"},
         )
@@ -82,6 +82,7 @@ class DocumentLoader:
         return documents
 
 
+
 class DocumentChunker:
     """Splits page text into smaller chunks and prepares ChromaDB metadata."""
 
@@ -89,9 +90,11 @@ class DocumentChunker:
         self.source_name = source_name
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
+            chunk_overlap=300,
             length_function=len,
-            separators=[""],  # split only by character count
+            separators=["\n\n", "\n", ". ", " ", ""],
         )
+
 
     def chunk_documents(
         self,
@@ -136,12 +139,14 @@ class DocumentChunker:
                     "total_chunks_on_page": len(chunks),
                 }
             )
-            all_ids.append(self._make_chunk_id(url, chunk_index))
+            all_ids.append(self._make_chunk_id(url, chunk_index, chunk))
 
     @staticmethod
-    def _make_chunk_id(url: str, chunk_index: int) -> str:
-        """Create a stable ID so repeated ingestion updates the same chunk."""
-        raw_id = f"{url}:{chunk_index}"
+    @staticmethod
+    def _make_chunk_id(url: str, chunk_index: int, chunk: str) -> str:
+        """Create a stable unique ID for each chunk."""
+        content_hash = hashlib.md5(chunk.encode("utf-8")).hexdigest()
+        raw_id = f"{url}:{chunk_index}:{content_hash}"
         return hashlib.md5(raw_id.encode("utf-8")).hexdigest()
 
 

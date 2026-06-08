@@ -208,59 +208,65 @@ def process_scraped_posters(processed_log: Set[str]) -> int:
 
 
 # ── Stage 2: Phone photos → GPT-5-mini vision ────────────────────────────────
+SELF_TAKEN_PHOTO_BASE_URL = "https://innoacademy.engg.hku.hk/innowing/self-taken-photos"
+
+
+def slugify_filename(filename: str) -> str:
+    """
+    Convert an image filename into a safe URL fragment.
+    Example:
+    'Makerspace A photo 1.jpg' -> 'makerspace-a-photo-1'
+    """
+    stem = Path(filename).stem.lower()
+    stem = re.sub(r"[^a-z0-9]+", "-", stem)
+    stem = stem.strip("-")
+    return stem or "photo"
+
+
+def make_self_taken_photo_url(image_path: Path) -> str:
+    """
+    Create a stable unique pseudo-URL for each self-taken photo.
+    This prevents duplicate ChromaDB IDs during embedding.
+    """
+    slug = slugify_filename(image_path.name)
+    return f"{SELF_TAKEN_PHOTO_BASE_URL}/{slug}"
 
 def process_phone_photos(processed_log: Set[str]) -> int:
     """
     Caption phone photos of InnoWing 1 physical spaces using GPT-5-mini vision.
-    Scope (per competition rules): Makerspace A, Open Event Area,
-    Brainstorming Area, gallery wall outside the office.
-    Appends records to data.json.  Returns count of newly processed images.
+    Scope: Makerspace A, Open Event Area, Brainstorming Area, gallery wall.
+    Appends records to data.json. Returns count of newly processed images.
     """
     images = find_phone_images()
     new_images = [p for p in images if p.name not in processed_log]
 
-    if not images:
-        print(f"\n📱 No phone photos found.")
-        print(f"   → Drop photos of InnoWing 1 spaces into: {PHONE_IMAGE_DIR}")
-        print("     (Makerspace A / Open Event Area / Brainstorming Area / gallery wall)")
-        return 0
-
-    print(f"\n📱 Found {len(images)} phone photo(s) "
-          f"({len(images) - len(new_images)} already processed, "
-          f"{len(new_images)} new)")
-
-    if not new_images:
-        return 0
-
-    # GPT-5-mini is used per competition instructions for image inputs
-    vision_model = os.getenv("AZURE_OPENAI_VISION_MODEL", "gpt-5-mini")
-    print(f"   Using vision model: {vision_model}")
-
     count = 0
-    for img_path in new_images:
-        print(f"   🔭 Vision  →  {img_path.name}")
-        try:
-            caption = describe_image(
-                image_path=str(img_path),
-                model=vision_model,
-                prompt=_SPACE_PROMPT,
-            )
 
-            record = {
-                "url": "innowings://physical/innowing-1",
-                "text": caption,
-                "source": "image",
-                "image": img_path.name,
-                "image_type": "phone_photo",
-                "location": "InnoWing 1",
-            }
-            append_record(record)
-            mark_processed(img_path.name)
-            count += 1
-            print(f"        ✅ Appended ({len(caption)} chars)")
+    for image_path in new_images:
+        print(f"📸 Describing self-taken photo: {image_path.name}")
 
-        except Exception as exc:
-            print(f"        ❌ Failed: {exc}")
+        description = describe_image(
+            image_path=image_path,
+            prompt=_SPACE_PROMPT,
+        )
+
+        if not description or not description.strip():
+            print(f"⚠️  Skipping {image_path.name}: empty description")
+            continue
+
+        record = {
+            "url": make_self_taken_photo_url(image_path),
+            "text": description.strip(),
+            "source": "self_taken_photo",
+            "image": image_path.name,
+            "image_type": "self_taken_photo",
+        }
+
+        append_record(record)
+        mark_processed(image_path.name)
+
+        count += 1
+        print(f"✅ Added self-taken photo record: {record['url']}")
 
     return count
 

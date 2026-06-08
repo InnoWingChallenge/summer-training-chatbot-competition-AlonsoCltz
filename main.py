@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import chromadb
+import numpy as np
 from dotenv import load_dotenv
 from openai import AzureOpenAI
-
+from rank_bm25 import BM25Okapi                  # Added for BM25 keyword stream
+from sentence_transformers import CrossEncoder    # Added for Re-ranking
 import json
 
 
@@ -34,15 +37,16 @@ class RAGConfig:
     top_k: int
     max_context_chars: int
     temperature: float
+    
+    # --- New Retrieve-Wide Rerank-Narrow Hyperparameters ---
+    retrieval_top_k: int = 10      # Retrieve a wider candidate net (e.g., Top-10)
+    rrf_k: int = 60                # Smoothing constant for RRF list merging
+    rerank_threshold: float = 0.0  # Logit cutoff boundary for Cross-Encoder filtering
+    final_top_k: int = 3           # Chunks ultimately delivered to GPT
+    vector_threshold: float = 0
 
     @classmethod
     def from_env(cls) -> "RAGConfig":
-        """
-        Load all runtime settings from .env / environment variables.
-        This file only reads the existing ChromaDB collection. It does not run
-        web_scrape.py or embed_gen.py. Run those files separately when you need
-        to rebuild the dataset or embeddings.
-        """
         base_dir = Path(__file__).resolve().parent
         load_dotenv(base_dir / ".env")
 
@@ -83,11 +87,14 @@ class RAGConfig:
 
 @dataclass(frozen=True)
 class RetrievedDocument:
-    """One document chunk returned by the vector database."""
+    """One document chunk returned by the hybrid retrieval streams."""
 
     text: str
     metadata: Dict[str, Any]
-    distance: Optional[float] = None
+    vector_score: float = 0.0
+    bm25_score: float = 0.0
+    rrf_score: float = 0.0
+    rerank_score: Optional[float] = None
 
     @property
     def source_url(self) -> str:
@@ -105,7 +112,6 @@ class AzureOpenAIService:
             api_version=config.chat_api_version,
         )
 
-
         self.embedding_client = AzureOpenAI(
             base_url=f"{config.embedding_endpoint}/openai/deployments/{config.embedding_model}",
             api_key=config.azure_openai_api_key,
@@ -113,7 +119,6 @@ class AzureOpenAIService:
         )
 
     def embed_query(self, question: str) -> List[float]:
-        """Create an embedding for the user question."""
         response = self.embedding_client.embeddings.create(
             input=[question.replace("\n", " ")],
             model=self.config.embedding_model,
@@ -126,13 +131,13 @@ class AzureOpenAIService:
         context: str,
         previous_questions: Optional[Sequence[str]] = None,
     ) -> str:
-        """Generate a grounded answer using retrieved context and recent question history."""
         system_prompt = (
             "You are a helpful assistant for HKU InnoWing and Innovation Academy. "
             "Answer only using the provided context. The previous questions are only "
             "there to help you understand follow-up questions such as 'it', 'they', or "
             "'that programme'. If the context does not contain the answer, say you do "
             "not have enough information. Keep the answer clear and concise."
+            "for image sources, there might be errors during OCR, fix the spelling if necessary."
         )
 
         history_text = self._format_previous_questions(previous_questions)
@@ -155,7 +160,6 @@ class AzureOpenAIService:
 
     @staticmethod
     def _format_previous_questions(previous_questions: Optional[Sequence[str]]) -> str:
-        """Format previous questions for the answer prompt."""
         if not previous_questions:
             return "None"
         return "\n".join(
@@ -165,82 +169,115 @@ class AzureOpenAIService:
 
 
 class ChromaRetriever:
-    """Reads the existing ChromaDB collection and retrieves relevant chunks."""
+    """Reads ChromaDB data, manages a localized BM25 index, and handles RRF pooling."""
 
     def __init__(self, config: RAGConfig):
         self.config = config
         self.client = chromadb.PersistentClient(path=str(config.chroma_path))
         self.collection = self._load_collection()
+        
+        # --- Build Accompanying BM25 Corpus Index ---
+        print("Loading all database chunks to construct the BM25 Index...")
+        all_data = self.collection.get(include=["documents", "metadatas"])
+        self.all_documents = all_data["documents"] or []
+        self.all_metadatas = all_data["metadatas"] or []
+        
+        tokenized_corpus = [self._tokenize(doc) for doc in self.all_documents]
+        self.bm25_index = BM25Okapi(tokenized_corpus)
+        print(f"BM25 baseline set up over {len(self.all_documents)} chunks.")
 
     def _load_collection(self):
         try:
             return self.client.get_collection(name=self.config.collection_name)
         except Exception as exc:
             raise RuntimeError(
-                f"Could not load ChromaDB collection '{self.config.collection_name}' "
-                f"from {self.config.chroma_path}. Make sure embeddings have already "
-                "been generated by running embed_gen.py separately."
+                f"Could not load ChromaDB collection '{self.config.collection_name}'"
             ) from exc
 
-    def retrieve(self, query_embedding: List[float], top_k: Optional[int] = None) -> List[RetrievedDocument]:
-        """Return the most relevant document chunks for the query embedding."""
-        n_results = top_k or self.config.top_k
-        results = self.collection.query(
+    @staticmethod
+    def _tokenize(text: str) -> List[str]:
+        """Simple regex alphanumeric tokenizer conforming to guidelines."""
+        return re.findall(r'[a-z0-9]+', text.lower())
+
+    def retrieve_hybrid_rrf(self, raw_question: str, query_embedding: List[float]) -> List[RetrievedDocument]:
+        """Runs Vector + BM25 parallel wide-searches, blending with Reciprocal Rank Fusion."""
+        top_k = self.config.retrieval_top_k
+
+        # Stream 1: Wide Dense Vector Search
+        vector_results = self.collection.query(
             query_embeddings=[query_embedding],
-            n_results=n_results,
+            n_results=top_k,
             include=["documents", "metadatas", "distances"],
         )
+        
+        v_docs = vector_results.get("documents", [[]])[0]
+        v_metas = vector_results.get("metadatas", [[]])[0]
+        v_dists = vector_results.get("distances", [[]])[0]
 
-        documents = results.get("documents", [[]])[0]
-        metadatas = results.get("metadatas", [[]])[0]
-        distances = results.get("distances", [[]])[0]
+        vector_ranked = {}
+        for rank, (doc, meta, dist) in enumerate(zip(v_docs, v_metas, v_dists)):
+            # Establish a reliable dictionary identifier mapping unique chunks
+            chunk_id = meta.get("url", "unknown") + ":" + str(meta.get("chunk_index", rank))
+            vector_ranked[chunk_id] = {
+                "rank": rank + 1,
+                "text": doc,
+                "meta": meta,
+                "vector_score": round(1 - dist, 4)
+            }
 
-        retrieved: List[RetrievedDocument] = []
-        for text, metadata, distance in zip(documents, metadatas, distances):
-            if text:
-                retrieved.append(
-                    RetrievedDocument(
-                        text=text,
-                        metadata=metadata or {},
-                        distance=distance,
-                    )
+        # Stream 2: Wide Sparse BM25 Keyword Search
+        query_tokens = self._tokenize(raw_question)
+        bm25_scores = self.bm25_index.get_scores(query_tokens)
+        top_bm25_indices = np.argsort(bm25_scores)[::-1][:top_k]
+
+        bm25_ranked = {}
+        for rank, idx in enumerate(top_bm25_indices):
+            meta = self.all_metadatas[idx]
+            chunk_id = meta.get("url", "unknown") + ":" + str(meta.get("chunk_index", idx))
+            bm25_ranked[chunk_id] = {
+                "rank": rank + 1,
+                "text": self.all_documents[idx],
+                "meta": meta,
+                "bm25_score": round(float(bm25_scores[idx]), 4)
+            }
+
+        # Step 3: Pool lists using Reciprocal Rank Fusion (RRF)
+        all_chunk_ids = set(vector_ranked.keys()) | set(bm25_ranked.keys())
+        fused_documents: List[RetrievedDocument] = []
+        
+        for cid in all_chunk_ids:
+            v_rank = vector_ranked.get(cid, {}).get("rank", top_k + 1)
+            b_rank = bm25_ranked.get(cid, {}).get("rank", top_k + 1)
+            
+            # Reciprocal Formula: 1 / (k + rank)
+            rrf_score = (1 / (self.config.rrf_k + v_rank)) + (1 / (self.config.rrf_k + b_rank))
+            source_data = vector_ranked.get(cid) or bm25_ranked.get(cid)
+
+            fused_documents.append(
+                RetrievedDocument(
+                    text=source_data["text"],
+                    metadata=source_data["meta"],
+                    vector_score=vector_ranked.get(cid, {}).get("vector_score", 0.0),
+                    bm25_score=bm25_ranked.get(cid, {}).get("bm25_score", 0.0),
+                    rrf_score=round(rrf_score, 6)
                 )
-                print(text)
-                print(metadata)
-                print(distance)
-                print("="*20)
-        return retrieved
+            )
+
+        # Sort combined results descending by calculated RRF score
+        fused_documents.sort(key=lambda x: x.rrf_score, reverse=True)
+        
+        return fused_documents[:top_k]
+
 
 class JsonHandler:
     @staticmethod
     def load_questions_from_json(path: Path) -> List[str]:
-        """Load questions from a JSON file.
-
-        Expected format:
-            [
-                "Question 1?",
-                "Question 2?"
-            ]
-        """
         if not path.exists():
             raise FileNotFoundError(f"Questions file not found: {path}")
-
         with path.open("r", encoding="utf-8") as file:
             questions = json.load(file)
+        return [q.strip() for q in questions if isinstance(q, str) and q.strip()]
 
-        if not isinstance(questions, list):
-            raise ValueError("questions.json must contain a JSON list of strings.")
-
-        cleaned_questions = [
-            question.strip()
-            for question in questions
-            if isinstance(question, str) and question.strip()
-        ]
-
-        if not cleaned_questions:
-            raise ValueError("questions.json does not contain any valid questions.")
-
-        return cleaned_questions
 
 class ContextBuilder:
     """Formats retrieved chunks into a compact context block for the LLM."""
@@ -272,7 +309,7 @@ class ContextBuilder:
 
 
 class RAGApplication:
-    """Coordinates query embedding, retrieval, context building, and answer generation."""
+    """Coordinates wide hybrid retrieval, Cross-Encoder re-ranking, and final narrow generation."""
 
     def __init__(self, config: RAGConfig):
         self.config = config
@@ -280,6 +317,11 @@ class RAGApplication:
         self.retriever = ChromaRetriever(config)
         self.context_builder = ContextBuilder(config.max_context_chars)
         self.previous_questions: List[str] = []
+        
+        # --- Instantiate Local Transformer Reranker ---
+        print("Loading local CPU Cross-Encoder ('ms-marco-MiniLM-L-6-v2')...")
+        self.reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+        print("Reranker ready.")
 
     def answer_question(
         self,
@@ -287,31 +329,68 @@ class RAGApplication:
         use_history: bool = True,
         save_to_history: bool = True,
     ) -> str:
-        """
-        Answer one question using retrieval-augmented generation.
-
-        If use_history=True, previous questions are included directly in the
-        retrieval query and final LLM prompt. This keeps the multi-question flow
-        simple without adding a separate question-rewriting step.
-        """
         if not question or not question.strip():
             raise ValueError("Question cannot be empty.")
 
         history = self.previous_questions if use_history else []
         retrieval_query = self._build_retrieval_query(question, history)
 
+        # 1. Wide Retrieval: Embed and query via the Vector + BM25 Hybrid flow
         query_embedding = self.openai_service.embed_query(retrieval_query)
-        retrieved_documents = self.retriever.retrieve(query_embedding)
-        context = self.context_builder.build(retrieved_documents)
+        candidates = self.retriever.retrieve_hybrid_rrf(question, query_embedding)
+        candidates = [
+            doc for doc in candidates
+            if doc.vector_score >= self.config.vector_threshold or doc.bm25_score > 0
+        ]
 
-        if not context.strip():
-            answer = "I do not have enough information to answer this question."
-        else:
-            answer = self.openai_service.generate_answer(
-                question=question,
-                context=context,
-                previous_questions=history,
+        if not candidates:
+            return "I do not have enough information to answer this question."
+
+        # 2. Narrow Re-ranking: Feed text pairs directly into Cross-Encoder
+        pairs = [(question, doc.text) for doc in candidates]
+        rerank_scores = self.reranker.predict(pairs)
+
+        reranked_docs = []
+        for doc, score in zip(candidates, rerank_scores):
+            # Map raw logits back to updated objects
+            updated_doc = RetrievedDocument(
+                text=doc.text,
+                metadata=doc.metadata,
+                vector_score=doc.vector_score,
+                bm25_score=doc.bm25_score,
+                rrf_score=doc.rrf_score,
+                rerank_score=float(score)
             )
+            reranked_docs.append(updated_doc)
+
+        # Sort candidates cleanly by Cross-Encoder logit scores
+        reranked_docs.sort(key=lambda x: x.rerank_score, reverse=True)
+
+        # 3. Confidence Level Guardrail Filter
+        # Logit values above 0.0 indicate semantic query satisfaction
+        filtered_docs = [
+            d for d in reranked_docs 
+            if d.rerank_score is not None and d.rerank_score >= self.config.rerank_threshold
+        ]
+
+        # Take strictly the targeted high-accuracy payload
+        final_context_docs = filtered_docs[:self.config.final_top_k]
+        for top_chunk in final_context_docs:
+            print(top_chunk)
+            print("="*20)
+        # Early execution exit if zero context items pass the logit check
+        if not final_context_docs:
+            print("\n[GUARD] Warning: No context passed the validation threshold.")
+            return "I do not have enough information in my knowledge base to answer that question accurately."
+
+        # 4. Final Clean Context Synthesis
+        context = self.context_builder.build(final_context_docs)
+        
+        answer = self.openai_service.generate_answer(
+            question=question,
+            context=context,
+            previous_questions=history,
+        )
 
         if save_to_history:
             self.previous_questions.append(question)
@@ -319,28 +398,18 @@ class RAGApplication:
         return answer
 
     def answer_questions(self, questions: Sequence[str]) -> List[Tuple[str, str]]:
-        """
-        Answer multiple related questions in order.
-
-        Each new question can use the earlier questions as simple conversation
-        history, so follow-up wording like "it" or "that programme" is easier
-        to understand.
-        """
         answers: List[Tuple[str, str]] = []
         for question in questions:
             answers.append((question, self.answer_question(question)))
         return answers
 
     def reset_history(self) -> None:
-        """Clear saved question history for a new conversation."""
         self.previous_questions.clear()
 
     @staticmethod
     def _build_retrieval_query(question: str, previous_questions: Sequence[str]) -> str:
-        """Combine previous questions with the current question for retrieval."""
         if not previous_questions:
             return question
-
         history_text = "\n".join(
             f"Previous question {index}: {previous_question}"
             for index, previous_question in enumerate(previous_questions, start=1)
@@ -348,55 +417,18 @@ class RAGApplication:
         return f"{history_text}\nCurrent question: {question}"
 
 
-def rag_answer(question: str) -> str:
-    """
-    Public API function for answering one question.
-
-    Example:
-        answer = rag_answer("What is the Innovation Academy?")
-    """
-    app = RAGApplication(RAGConfig.from_env())
-    return app.answer_question(question)
-
-
-def generate_rag_answers(questions: List[str]) -> List[Tuple[str, str]]:
-    """
-    Public API function for answering multiple related questions.
-
-    Questions are answered in order. Each question can use previous questions as
-    simple conversation history.
-
-    Returns:
-        A list of (question, answer) pairs.
-    """
-    app = RAGApplication(RAGConfig.from_env())
-    return app.answer_questions(questions)
-
-
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Ask questions against the existing ChromaDB RAG index. "
-            "This script does not run the web scraper or embedding generator."
-        )
-    )
-    parser.add_argument(
-        "questions",
-        nargs="*",
-        help="Question(s) to ask. If omitted, an example question is used.",
-    )
+    parser = argparse.ArgumentParser(description="Ask questions against upgraded hybrid RAG index.")
+    parser.add_argument("questions", nargs="*", help="Question(s) to execute.")
     return parser.parse_args()
 
 
 def main() -> None:
-    """Command-line entry point."""
     args = parse_args()
-
     config = RAGConfig.from_env()
     app = RAGApplication(config)
 
     questions = args.questions
-
     if not questions:
         questions_path = config.base_dir / "questions.json"
         questions = JsonHandler.load_questions_from_json(questions_path)

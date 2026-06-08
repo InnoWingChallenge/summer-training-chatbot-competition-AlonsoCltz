@@ -221,155 +221,38 @@
     "image_type": "scraped_poster"
   },
   {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "BrainStormingAreaLEDBoard.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "This looks like the Open Event Area of HKU InnoWings, with tiered seating and rows of colorful modular cube seats facing a large high-definition display wall currently showing a “Robotic Fish” presentation. The space includes a lectern/podium, integrated AV display for demos or pitches, and a glass-walled meeting room off to the side for breakout discussions or small workshops. There are no heavy maker machines visible here (no 3D printers or laser cutters in frame), so the area is best suited to presentations, prototype showcases, seminars, and collaborative brainstorming sessions. Students and entrepreneurs would find this useful for pitching ideas, running public demos, hosting workshops, and coordinating small team meetings while makerspace equipment is likely located nearby in dedicated lab rooms.",
-    "source": "image",
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/brainstormingarea",
+    "text": "This looks like the Open Event Area of HKU InnoWings, featuring a large wall-mounted LED display for presentations and a lectern/podium for demos. The space includes tiered seating and colorful modular cube stools that can be reconfigured for audiences, workshops, or informal brainstorming sessions, plus a glass-walled breakout/meeting room for smaller team discussions. There are no heavy fabrication tools visible (no 3D printers or laser cutters in view), so the area is best suited for talks, product demos, pitch sessions, collaborative planning, and showcasing prototypes. Students interested in innovation and entrepreneurship will find the AV infrastructure, flexible seating and adjacent meeting room useful for events, rehearsals, and team work.",
+    "source": "self_taken_photo",
     "image": "BrainstormingArea.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
+    "image_type": "self_taken_photo"
   },
   {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "BrainstormingAreaFront.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "BranstormingAreaStairs.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "This corner reads like a gallery wall inside HKU InnoWings (Haking Wong Building), covered with large archival panels and captioned historic photographs about engineering and labs. There are no visible fabrication tools such as 3D printers or laser cutters here; the fit-out is focused on display panels and interpretive content rather than hands-on equipment. The space supports exhibitions, history-focused events, and informal conversations — there’s an adjacent standing table that can be used for quick meetings or project discussions. Students interested in innovation and entrepreneurship would find this area useful for inspiration, storytelling, and showcasing work, while needing to move to nearby makerspaces for prototyping and fabrication.",
-    "source": "image",
-    "image": "GalleryPoster1.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "A curated gallery wall in the Innovation Wing of the Haking Wong Building, featuring large mounted historical photographs and captioned display panels that document engineering, architecture and hands-on teaching activities. The space contains exhibition panels and labels rather than fabrication tools—no 3D printers or laser cutters are visible—so it functions as a display and interpretive area within the makerspace complex. It supports exhibitions, inspiration and outreach for students interested in innovation and entrepreneurship by showcasing past projects and practical skills (e.g., hands-on problem solving, surveying, open-day activities) that connect heritage and practice.",
-    "source": "image",
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter2",
+    "text": "A gallery wall filled with archival photographs and captioned display panels documents the engineering and making heritage of the space, clearly serving as an exhibit area rather than a hands-on workshop. The images and labels show historical workshop activities — machining, lathe and metalwork, surveying, and group problem-solving at workbenches — giving visitors a sense of the practical skills that underpinned past innovation. This display area supports exhibitions, orientation and storytelling for students, providing context and inspiration for makers, innovators and entrepreneurs who use the building. It’s a place to learn about past practices, spark ideas and connect current projects to a longer tradition of hands-on engineering.",
+    "source": "self_taken_photo",
     "image": "GalleryPoster2.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
+    "image_type": "self_taken_photo"
   },
   {
-    "url": "innowings://physical/innowing-1",
-    "text": "This appears to be a gallery wall or display/exhibition area within the Innovation Wing, showing a photographic timeline and images of buildings, labs and student groups. The space is organized with mounted display panels and framed photos rather than hands-on fabrication equipment — no 3D printers, laser cutters or soldering stations are visible in this shot. It supports activities like exhibitions, orientation, storytelling of departmental history and showcasing student projects and events, acting as a visual hub for the community. For students interested in innovation or entrepreneurship, this kind of display area is useful for inspiration, learning about past initiatives and finding pointers to makerspace facilities and events elsewhere in the building.",
-    "source": "image",
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter3",
+    "text": "This is a gallery wall-style exhibition area inside HKU InnoWings in the Haking Wong Building, featuring large printed panels and a montage of historical and campus photographs with small caption labels. The space is organized for visual display rather than fabrication — there are no 3D printers, laser cutters, or workbenches visible, only mounted images and informational text. It supports orientation, storytelling and inspiration, showcasing the school’s buildings, past projects and student groups to spark ideas and pride. For students interested in innovation, making or entrepreneurship this display provides historical context, highlights milestones and directs attention to the kinds of facilities and activities available elsewhere in the building.",
+    "source": "self_taken_photo",
     "image": "GalleryPoster3.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
+    "image_type": "self_taken_photo"
   },
   {
-    "url": "innowings://physical/innowing-1",
-    "text": "This appears to be a gallery wall inside the Innovation Wing (a display/gallery area in the Haking Wong Building) featuring large printed panels of historic photos, building renderings and captions about departments and facilities. The space is fitted with mounted display panels and explanatory labels rather than hands-on equipment, serving as an informational and inspirational exhibit for students. It highlights past workshops, lab spaces and engineering or maker activities—useful for orienting newcomers to available resources and the evolution of campus innovation facilities. Students interested in making or entrepreneurship would find context here, plus pointers to practical labs, soldering and electronics benches, and fabrication spaces elsewhere in the building.",
-    "source": "image",
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter4",
+    "text": "This area reads like a gallery wall in the Haking Wong Building, presenting a curated history of makers, labs and facilities rather than an active workshop. The panels and framed photos show computer workstations, electronics benches with wiring and test gear, and shots of the building and earlier makerspace-type activities, suggesting resources such as computer labs and soldering/electronics workstations are part of the wider facility. The display supports exhibition, orientation and storytelling about past projects, useful for students to learn what tools and spaces have been available for prototyping and innovation. For students interested in making or entrepreneurship, this gallery highlights where to find technical resources, inspires project ideas, and points toward practical facilities and collaborative spaces within the building.",
+    "source": "self_taken_photo",
     "image": "GalleryPoster4.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
+    "image_type": "self_taken_photo"
   },
   {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "GalleryPoster5.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "GalleryPoster6.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "MakerSpaceA2.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "MakerSpaceA3.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "OpenEventAreaPoster1.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "OpenEventAreaPoster2.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "OpenEventAreaPoster3.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/openeventarearule",
+    "text": "The sign identifies this as the \"Open Event Area\" and directs anyone needing hands‑on tool use to \"Maker Space A.\" The poster explicitly prohibits tool use and model‑making (no cutters, glue, hammers, etc.) here and promotes the space for study, group discussion and collaborative learning. This area appears designed for seminars, brainstorming, exhibitions or teamwork rather than fabrication, with directions to contact the office for further information. Students interested in prototyping or equipment‑heavy work are steered to Maker Space A, while this venue suits talks, workshops, networking and project meetings.",
+    "source": "self_taken_photo",
     "image": "OpenEventAreaRule.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "OpenEventAreaTable.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "OpenEventAreaTables.jpg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
-  },
-  {
-    "url": "innowings://physical/innowing-1",
-    "text": "",
-    "source": "image",
-    "image": "makerspace_A.jpeg",
-    "image_type": "phone_photo",
-    "location": "InnoWing 1"
+    "image_type": "self_taken_photo"
   }
 ]
