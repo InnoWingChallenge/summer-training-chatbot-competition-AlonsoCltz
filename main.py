@@ -205,6 +205,10 @@ class ChromaRetriever:
                         distance=distance,
                     )
                 )
+                print(text)
+                print(metadata)
+                print(distance)
+                print("="*20)
         return retrieved
 
 class JsonHandler:

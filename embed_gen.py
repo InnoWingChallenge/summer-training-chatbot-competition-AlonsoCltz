@@ -48,8 +48,8 @@ class EmbeddingConfig:
             azure_api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2024-10-21"),
             collection_name=os.getenv("CHROMA_COLLECTION_NAME", "Innowing_db"),
             source_name=os.getenv("SOURCE_NAME", "HKU InnoWings / InnoAcademy"),
-            chunk_size=int(os.getenv("CHUNK_SIZE", "3000")),
-            batch_size=int(os.getenv("BATCH_SIZE", "50")),
+            chunk_size=int(os.getenv("CHUNK_SIZE", "1000")),
+            batch_size=int(os.getenv("BATCH_SIZE", "150")),
             fresh_ingest=os.getenv("FRESH_INGEST", "true").lower() in {"1", "true", "yes"},
         )
 
