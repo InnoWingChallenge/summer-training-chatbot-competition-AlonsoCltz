@@ -82,7 +82,7 @@ def describe_image(
     resp = client.chat.completions.create(
         model=active_model,
         messages=messages,
-        max_completion_tokens=500,
+        max_completion_tokens=1500,
     )
 
     return resp.choices[0].message.content or ""
