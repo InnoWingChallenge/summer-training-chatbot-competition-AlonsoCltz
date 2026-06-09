@@ -231,6 +231,17 @@ def make_self_taken_photo_url(image_path: Path) -> str:
     slug = slugify_filename(image_path.name)
     return f"{SELF_TAKEN_PHOTO_BASE_URL}/{slug}"
 
+def filename_to_title(image_path: Path) -> str:
+    """
+    Convert an image filename into a readable title.
+    Example:
+    'makerspace-a-photo-1.jpg' -> 'Makerspace A Photo 1'
+    """
+    title = image_path.stem
+    title = re.sub(r"[_\-]+", " ", title)
+    title = re.sub(r"\s+", " ", title).strip()
+    return title.title()
+
 def process_phone_photos(processed_log: Set[str]) -> int:
     """
     Caption phone photos of InnoWing 1 physical spaces using GPT-5-mini vision.
@@ -245,10 +256,15 @@ def process_phone_photos(processed_log: Set[str]) -> int:
     for image_path in new_images:
         print(f"📸 Describing self-taken photo: {image_path.name}")
 
+        
+        image_title = filename_to_title(image_path)
+
         description = describe_image(
-            image_path=image_path,
-            prompt=_SPACE_PROMPT,
+            image_path=str(image_path),
+            image_title=image_title,
+#            prompt=_SPACE_PROMPT,
         )
+
 
         if not description or not description.strip():
             print(f"⚠️  Skipping {image_path.name}: empty description")

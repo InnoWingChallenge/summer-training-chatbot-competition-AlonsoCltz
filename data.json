@@ -215,140 +215,350 @@
   },
   {
     "url": "https://innoacademy.engg.hku.hk/pitching/",
+    "text": "Tam\nFan\nInnovation\nROBOTIC ARM BIN\nFACULTY OF ENGINEERING\nPICKING CHALLENGE\nChen\nBryan Ng\nDetails:\nMotivation\nChallenge Objectives\nIndustrial needs for automation\nProgram the robotic arm to automatically detect\nFirst step to solve real-world problems\nrandomly scattered screws and nuts in a tray, then\nFirst step to develop embodied-Al skills\nand place each object into the correct bin:\nSorted\nRandom\nMethodology\nI: Data Collection & Object\nDetection\nCollected 60 images of screws and\nnuts under\nconditions for\ntraining:\nTrain a YOLOII model for high-\nStep 3: Robotic Arm Control\naccuracy detection:\nUsed Python to control the robotic\nEstimated each objects position and\narm and gripper movement;\norientation using the RGB-D camera\nfeed.\nProgrammed 4-degree-of-freedom\nmovement in X, Y,Z axes, roll angle,\nStep 2: Hand-to-Eye Calibration\nand gripping operation:\n&Transformations\nUsed AprilTag to\ntag\nAprilTag\nData\nsampling\nCalibration\nDetection\nCamera\ntransformations from camera\nComputed the transformation from\nTransformation(\n3D Coordiante\nthe camera to the robot base\nSTART\nrobot base\nCalculation\nObject\nframe.\nDetection\nGripper\nframe)\ncamera frame;\nConverted detected object\npositions into robot arm coordinates\nfor accurate grasping:\nGripper\nGrasping\nSorting\nMovement\nEngineering Challenges & Solutions\nCamera Mismatch in Object Detection:\nCoordinate Shift After Collision:\nCollected training images directly from\nWhen detected repeated failed grasping\nprovided camera to match the real\nattempts, robotic arm will automatically do\nthe initialization to reduce accumulated\ndetection environment to Improved object\ncoordinate errors after collision\ndetection accuracy during actual\noperation\nCalibration Matrix Error:\nUnreachable Coordinates and Angles:\nCaptured 20 AprilTag frames at the\nLimited the camera detection region to the\nbeginning and take average to obtaine\na\ntray area to filter out unreachable object\nmore reliable calibration matrix\npositions\nResults & Performance\n80-90%\nSUCCESS PICK\n1\nRate\n40o%\nmins\n0\nSUCCESS SORT\nRATE\nLimitations:\nAccurary: Sorted all 16 screws and nuts in 18-20 picks:\nAccidentally grasp more\none\nDuration: Completed 16 pick-and-place cycles around 3 minutes.\n1)\nCoordinate Shiff\nAfter Collision\n2)\nWing\nWing\nYung\nHang,\npick\nStep\nvaried\nget\npobor",
+    "source": "image",
+    "image": "OpenEventAreaPoster1.jpg",
+    "image_type": "scraped_poster"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/pitching/",
+    "text": "ROBOT ARM\nCHALLENGE\nLuadnbaav|\nSeason\nTeam\nRecord\n2026 Spring\nChen Yung Hang\n16 objects in 3.17\nBryan Ng\nGerald Benedict Setiawan\n2026 Spring\nNathan Lie\n15 objects in 2:19\nNadeem Nabiha\nLin Chung Hsien\n2026 Spring\n12 objects in 3.29\nSung Tszwa\nHu Yuhao\n2026 Spring\nJi Yuchen\n12 objects in 5:00\nXu Chenyang\n2025 Fall\nLaw Yin Ching\n11\nobjects in 5.00\nMichael\nZhou Hanyu\n2026 Spring\nWang Zihan\n10 objects in 3:06\nXu Jingfeng\nAaron Chris Dsouza\n2025 Fall\n9 objects in 5.00\nNivesh Dandyan\nTeams are ranked by the number of\n#\ncorrectly_sorted objects, then time.\nMax 5 minutes per run.",
+    "source": "image",
+    "image": "OpenEventAreaPoster2.jpg",
+    "image_type": "scraped_poster"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/pitching/",
+    "text": "This activity is supported by Tam\nFan Innovation Fund\nTam Wing Fan\nInnovation\nand Philomathia Foundation Innovation Fund.\nInnovation\nAcademy\nFaculty of Engineering; HKU\nFACULTY OF ENGINEERING\nROBOT ARM\nOHALLENGE\nSPRING 2026 Season\nSwing into the bin\nSort the Chaos\n1\nWho Will Vie\nfor the Throne?\nChallenge briefing &\nSharing by former winners\nBrainstorming Area,\nTam\nFan Innovation\nOne\n12:00 PM, Feb. 13, 2026\nFinal\nChallenge\nMore details\nRegister nowl\nMar. 18,\n1 & 15, 2026\nWing\nWing\nWing\nWing\nApr.",
+    "source": "image",
+    "image": "OpenEventAreaPoster3.jpg",
+    "image_type": "scraped_poster"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/pitching/",
     "text": "in HKU Innovation Academy",
     "source": "image",
     "image": "Your-paragraph-text-2-rf983ezy0lo79fwv2izykox0566egubfh5k6ahombk.png",
     "image_type": "scraped_poster"
   },
   {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/brainstormingarea",
-    "text": "This looks like the Open Event Area of HKU InnoWings, featuring a large wall-mounted LED display for presentations and a lectern/podium for demos. The space includes tiered seating and colorful modular cube stools that can be reconfigured for audiences, workshops, or informal brainstorming sessions, plus a glass-walled breakout/meeting room for smaller team discussions. There are no heavy fabrication tools visible (no 3D printers or laser cutters in view), so the area is best suited for talks, product demos, pitch sessions, collaborative planning, and showcasing prototypes. Students interested in innovation and entrepreneurship will find the AV infrastructure, flexible seating and adjacent meeting room useful for events, rehearsals, and team work.",
-    "source": "self_taken_photo",
-    "image": "BrainstormingArea.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter2",
-    "text": "A gallery wall filled with archival photographs and captioned display panels documents the engineering and making heritage of the space, clearly serving as an exhibit area rather than a hands-on workshop. The images and labels show historical workshop activities — machining, lathe and metalwork, surveying, and group problem-solving at workbenches — giving visitors a sense of the practical skills that underpinned past innovation. This display area supports exhibitions, orientation and storytelling for students, providing context and inspiration for makers, innovators and entrepreneurs who use the building. It’s a place to learn about past practices, spark ideas and connect current projects to a longer tradition of hands-on engineering.",
-    "source": "self_taken_photo",
-    "image": "GalleryPoster2.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter3",
-    "text": "This is a gallery wall-style exhibition area inside HKU InnoWings in the Haking Wong Building, featuring large printed panels and a montage of historical and campus photographs with small caption labels. The space is organized for visual display rather than fabrication — there are no 3D printers, laser cutters, or workbenches visible, only mounted images and informational text. It supports orientation, storytelling and inspiration, showcasing the school’s buildings, past projects and student groups to spark ideas and pride. For students interested in innovation, making or entrepreneurship this display provides historical context, highlights milestones and directs attention to the kinds of facilities and activities available elsewhere in the building.",
-    "source": "self_taken_photo",
-    "image": "GalleryPoster3.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter4",
-    "text": "This area reads like a gallery wall in the Haking Wong Building, presenting a curated history of makers, labs and facilities rather than an active workshop. The panels and framed photos show computer workstations, electronics benches with wiring and test gear, and shots of the building and earlier makerspace-type activities, suggesting resources such as computer labs and soldering/electronics workstations are part of the wider facility. The display supports exhibition, orientation and storytelling about past projects, useful for students to learn what tools and spaces have been available for prototyping and innovation. For students interested in making or entrepreneurship, this gallery highlights where to find technical resources, inspires project ideas, and points toward practical facilities and collaborative spaces within the building.",
-    "source": "self_taken_photo",
-    "image": "GalleryPoster4.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/openeventarearule",
-    "text": "The sign identifies this as the \"Open Event Area\" and directs anyone needing hands‑on tool use to \"Maker Space A.\" The poster explicitly prohibits tool use and model‑making (no cutters, glue, hammers, etc.) here and promotes the space for study, group discussion and collaborative learning. This area appears designed for seminars, brainstorming, exhibitions or teamwork rather than fabrication, with directions to contact the office for further information. Students interested in prototyping or equipment‑heavy work are steered to Maker Space A, while this venue suits talks, workshops, networking and project meetings.",
-    "source": "self_taken_photo",
-    "image": "OpenEventAreaRule.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/brainstormingarealedboard",
-    "text": "This appears to be an open event area of the Innovation Wing / Innovation Academy at HKU, set up for presentations and small exhibitions. The space features a large LED display/video wall, a lectern/ podium with a built-in computer and AV equipment, a roll-up exhibition banner, and a glassed meeting area with tables and chairs visible to the side. It supports talks, product demos, workshops and pitch-style sessions where students can show prototypes and run interactive demonstrations. The layout and AV facilities make it well suited for entrepreneurship events, collaborative workshops and quick handoffs to adjacent hands-on spaces for prototyping and maker activities.",
+    "text": "A brainstorming area centered on a large LED video wall displaying a close-up image, flanked by a white perforated lectern and a freestanding dark-green \"Innovation Academy, Faculty of Engineering, HKU\" banner. The room has neutral grey striped carpeting, pale mint-green trim above, and additional seating visible through a glass partition.",
     "source": "self_taken_photo",
     "image": "BrainStormingAreaLEDBoard.jpg",
     "image_type": "self_taken_photo"
   },
   {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/brainstormingarea",
+    "text": "A modern brainstorming area with tiered navy seating and three rows of colorful cube stools — about 18 in total — arranged in yellow, orange, and lime-green with a single red end cube. A large wall-mounted digital screen displays an aquatic image about robotic fish against a pale blue wall, while a glass-walled meeting room and white lectern sit in the background on grey carpet.",
+    "source": "self_taken_photo",
+    "image": "BrainstormingArea.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/brainstormingareafront",
-    "text": "This appears to be the Open Event Area of HKU InnoWings (the word \"Innovation\" is visible on the wall) featuring tiered amphitheatre seating and modular, colorful cube seats with long bench seating along one side. The space includes a small kitchenette/sink and water dispenser, multiple power outlets built into the seating tiers, and a glass-walled room adjacent for overflow or breakout use. The layout supports talks, pitches, workshops, group brainstorming and informal demos with flexible seating for audiences or collaborative teams. Students interested in innovation and entrepreneurship will find it well suited for events, ideation sessions and presentations, though dedicated fabrication equipment (e.g., 3D printers or laser cutters) is not evident in this view.",
+    "text": "A modern brainstorming front area features three-tiered wooden steps with blue accents, a long teal-cushioned bench, and a kitchenette with light wood cabinets and a white countertop. Twelve cube seats in red, orange, and yellow are arranged in three neat rows on a beige striped carpet beneath a glass wall.",
     "source": "self_taken_photo",
     "image": "BrainstormingAreaFront.jpg",
     "image_type": "self_taken_photo"
   },
   {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/branstormingareastairs",
-    "text": "This looks like an Open Event Area in the HKU Engineering Innovation space, with a large gallery-style wall sign saying \"HKU Engineering Innovation.\" The area is arranged with tiered bench seating and broad work surfaces, each fitted with built-in power sockets for laptops and devices. A small kitchenette or service counter is visible at the left and a glass partition/door at the right, giving the space flexible edges for audience flow and breakouts. The configuration supports talks, demos, group brainstorming, laptop-based prototyping and product showcases — well suited to student pitches, workshops and collaborative innovation sessions rather than heavy fabrication.",
+    "text": "Three wide tiered platforms serve as a brainstorming area staircase with integrated power outlets and a cushioned bench at the bottom, finished in blue, teal, white and light wood tones. A large wall sign reading \"HKU ENGINEERING INNOVATION\" dominates the background while a small kitchenette or service counter is visible to the left.",
     "source": "self_taken_photo",
     "image": "BranstormingAreaStairs.jpg",
     "image_type": "self_taken_photo"
   },
   {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter1",
-    "text": "This image shows a gallery wall/exhibition area in the InnoWings space, with large mounted panels of historical photographs and explanatory captions. The primary fixtures are wall-mounted display panels and an adjacent high table, rather than fabrication equipment — no 3D printers, laser cutters, soldering stations or workbenches are visible. The layout supports passive viewing, small-group discussions, open events and project showcases, offering a place for students to gather, be inspired and present work. For innovation and entrepreneurship students this area provides context and heritage, a curated backdrop for networking, exhibitions and informal meetings.",
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/establishmentofdepartmentofcomputerscience1988",
+    "text": "A museum-style display commemorates the establishment of the Department of Computer Science in 1988, featuring two main panels: a sepia-toned newspaper front page titled \"Student Extra\" announcing a new department for HKU and a large architectural rendering of a multi-story campus building. Dominant colors are beige, brown and blue, and the illustration includes small figures, cars and prominent stairways leading into the building.",
     "source": "self_taken_photo",
-    "image": "GalleryPoster1.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter5",
-    "text": "A gallery wall in the Haking Wong Building showcasing historical photos and captioned display panels about HKU engineering and maker projects. The panels include images of workshops and labs — workbenches, students conducting experiments, a CNC/machining station, and outdoor project teams — giving a sense of the hands‑on equipment and prototyping activity the school supports. The display documents field builds, lab experiments, competitions and industrial training, highlighting cross‑disciplinary student projects and practical learning opportunities. For students interested in innovation or entrepreneurship, the wall acts as an archive and inspiration source that points to available makerspace facilities, lab resources, and collaboration opportunities.",
-    "source": "self_taken_photo",
-    "image": "GalleryPoster5.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/galleryposter6",
-    "text": "A large gallery wall in the Tam Wing Fan Innovation Wing at HKU displays framed photographs and captioned panels documenting cheque presentations, dedication ceremonies, innovation shows and site visits. The panels act as an exhibition and historical record of the wing’s events and student teams rather than a fabrication area—no 3D printers or bench tools are visible on the display itself. This curated wall supports outreach and showcases achievements, helping students discover past projects, competitions and funding milestones. It also signals nearby maker and event spaces where students interested in innovation, prototyping and entrepreneurship can network, learn about opportunities and join hands‑on activities.",
-    "source": "self_taken_photo",
-    "image": "GalleryPoster6.jpg",
+    "image": "EstablishmentOfDepartmentOfComputerScience1988.jpg",
     "image_type": "self_taken_photo"
   },
   {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/makerspacea2",
-    "text": "This appears to be Makerspace A in HKU InnoWings, a hands-on prototyping lab. Along the back counter are several desktop 3D printers and an enclosed machine, with labelled storage cabinets beneath and a suspended power drop over the central table. The space has large communal workbenches with stools, ample bench space and storage, and windows into adjacent workshop areas. It supports rapid prototyping, 3D printing, small-scale fabrication and collaborative project work, providing students with tools and shared workspace for iterating product ideas and running hands-on workshops in innovation and entrepreneurship.",
+    "text": "A well-lit makerspace with pale wood workbenches and a row of five black desktop 3D printers lined up on a gray countertop against a white wall. The room features large windows, overhead fluorescent panels, a hanging power cord, light gray flooring and four round wooden stools tucked under the central bench.",
     "source": "self_taken_photo",
     "image": "MakerSpaceA2.jpg",
     "image_type": "self_taken_photo"
   },
   {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/makerspacea3",
-    "text": "This appears to be Makerspace A in HKU InnoWings' Innovation Wing, set up as a collaborative workshop and demo area. The room has multiple large workbenches with stools, wall storage cabinets, a mobile whiteboard, desktop monitors and a larger display screen currently showing a VR motion-capture demo, plus assorted cables and electronics on the counters. The layout supports hands-on prototyping, group brainstorming, workshops and product demonstrations, particularly for projects involving interactive systems and VR. Students interested in innovation, making or entrepreneurship can use the space for team builds, testing and demos, presentations and short-term storage of small tools and components.",
+    "text": "A makerspace workroom centered on a large light-wood high table with four dark stools, set on pale gray floors in front of rows of white storage cabinets. A colorful TV monitor showing a VR/motion-capture graphic, a flip whiteboard on a stand, a smaller monitor, hanging power cable, and large windows with green plants provide functional and green accents.",
     "source": "self_taken_photo",
     "image": "MakerSpaceA3.jpg",
     "image_type": "self_taken_photo"
   },
   {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/openeventareaposter1",
-    "text": "A large project poster mounted on a gallery-style display in the Tam Wing Fan Innovation Wing (Haking Wong Building) documents a “Robotic Arm Bin Picking Challenge.” Images and diagrams show a 4‑degree‑of‑freedom robotic arm with a gripper, an RGB‑D camera, trays of screws and nuts, and workflow blocks for object detection (YOLO), AprilTag calibration, and coordinate transformation. The display highlights hands‑on activities supported here — robotic prototyping, computer vision, sensor calibration, and pick‑and‑place demonstrations — and reads like a student project or competition showcase. This area appears used for exhibiting student work and technical demonstrations, making it useful for students interested in practical robotics, rapid prototyping, and entrepreneurship collaborations.",
-    "source": "self_taken_photo",
-    "image": "OpenEventAreaPoster1.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/openeventareaposter2",
-    "text": "A gallery-style leaderboard display in an open event/gallery area of HKU InnoWings (Haking Wong Building) prominently advertises a \"Robot Arm Challenge.\" The wall uses multiple labeled panels to show seasons, teams and their records, with QR codes and informational signage at the bottom for further details. The presentation indicates the space supports robotics and maker events, student competitions, project showcases and demonstrations where teams compare performance and track results. This area is well suited for students interested in innovation, making or entrepreneurship to present prototypes, join challenges, recruit collaborators and access event information.",
-    "source": "self_taken_photo",
-    "image": "OpenEventAreaPoster2.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
-    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/openeventareaposter3",
-    "text": "A printed poster is mounted on a gallery/notice wall in the Tam Wing Fan Innovation Wing at HKU advertising the \"Robot Arm Challenge — Spring 2026 Season.\" The poster specifically points people to the Brainstorming Area for a challenge briefing and sharing session, and the wall serves as a display panel for upcoming events and registrations (QR codes are visible). No makerspace tools are shown in the photo, but the event description and venue imply hands-on robotics work, team competitions and workshops that would typically be supported by prototyping equipment, workbenches and collaborative spaces in Makerspace A or the Innovation Wing. This posting signals opportunities for students to join hands-on projects, attend briefings led by past winners, register for challenges and network with peers interested in innovation and entrepreneurship.",
-    "source": "self_taken_photo",
-    "image": "OpenEventAreaPoster3.jpg",
-    "image_type": "self_taken_photo"
-  },
-  {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/openeventareatable",
-    "text": "This appears to be Makerspace A, with a cluster of modular white worktables and grey chairs arranged for small-group collaboration. Along the windowed wall are bench stations equipped with inspection microscopes/cameras and power connections, plus posters and display panels highlighting projects and challenges, while a large automated storage or fabrication unit sits against the far wall. The layout and equipment support electronics assembly and soldering, close-up inspection, robotic-arm or automation challenges, hands-on prototyping and workshop-style teaching. Students interested in innovation and entrepreneurship would find this space useful for building and testing prototypes, running team-based projects, and exhibiting work.",
+    "text": "An open event area features four white modular tables joined together and surrounded by several grey chairs on a light grey striped carpet. Large glass windows with blue-tinted light and a poster display line one side, while microphones, cables and a few yellow props rest on tables in the background.",
     "source": "self_taken_photo",
     "image": "OpenEventAreaTable.jpg",
     "image_type": "self_taken_photo"
   },
   {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/openeventareatables",
-    "text": "The room is labelled as an Open Event Area within HKU InnoWings and is set up with clusters of modular, movable workbenches and stackable chairs arranged for group work. Visible fixtures include storage cabinets, wall display posters, a ceiling-mounted projector and power outlets, and a filament reel and workstation equipment that suggest light prototyping and electronics work. The layout supports workshops, brainstorming sessions, student collaboration and small-scale prototyping, with space for demonstrations or presentations. Students interested in innovation and entrepreneurship would find the flexible furniture, storage and presentation facilities useful for pitching ideas, hands-on making and rapid iteration.",
+    "text": "An open event area with about eight white modular tables and matching gray chairs arranged in small clusters on a neutral gray carpet next to a blue linoleum section. Overhead industrial lighting and exposed ceiling fixtures illuminate the room; a single person sits at a table in the back near stacked chairs and informational posters on the far wall.",
     "source": "self_taken_photo",
     "image": "OpenEventAreaTables.jpg",
     "image_type": "self_taken_photo"
   },
   {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture10-surveying1951",
+    "text": "A gallery-style display features a black-and-white 1951 photograph of surveying work, showing five men in white clothing and hats using measuring rods and a stretched survey line. The surrounding exhibit uses teal and blue panels with binary motifs, contrasting with the monochrome image.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture10_Surveying1951.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture11-opendaycirca1965",
+    "text": "A gallery-style display features a black-and-white photograph from circa 1965 showing three students leaning over a desk, poring over papers as one points and another rests their chin on their hand. The monochrome image is mounted on a teal-blue exhibition panel and shows desks, loose papers and booklets in the foreground.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture11_OpenDayCirca1965.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture12-solimechaniclaboratorycirca1951",
+    "text": "A gallery-style display features a large black-and-white photograph (circa 1951) of two technicians in a soil mechanics laboratory operating a mechanical testing apparatus. The vintage image is mounted on a teal-blue panel with white decorative lines and a vertical label identifying the Soil Mechanic Laboratory.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture12_SoliMechanicLaboratoryCirca1951.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture13-studentstookphotooutsidehotungengineeringworkshop",
+    "text": "A gallery-style display featuring two photographs: a large image of a group of students inside the Ho Tung Engineering Workshop handling tools and wiring on a white floor, and a smaller inset photo of five students posed outside the workshop. The panel uses teal and light-blue tones with visible overhead lighting, industrial machinery, scattered tools, and a red shirt in the inset.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture13_StudentsTookPhotoOutsideHoTungEngineeringWorkshop.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture14-redmondbuildingwasopenin1970duringprof-h-c-h-gurneydeanshipofengineering-thebuildingwasrenamedasyampakbuildingin1996",
+    "text": "A gallery-style display shows a five-story cream-and-red academic building with bold red window frames, a prominent exterior zigzag staircase, trees along the street and a clear blue sky. The caption notes the Redmond Building opened in 1970 during Prof H.C.H. Gurney’s deanship of engineering and was renamed the Yam Pak Building in 1996.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture14_RedmondBuildingWasOpenIn1970DuringProf_H.C.H_GurneyDeanshipOfEngineering_TheBuildingWasRenamedAsYamPakBuildingIn1996.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture16-hankingwongbuilding1983",
+    "text": "A gallery-style display features a large mounted photograph of the Haking Wong Building, dated circa 1983, set against a pale blue and white background. The print shows the multi-story concrete structure with a broad staircase and several people, flanked by green trees, potted plants, a pedestrian bridge and a bright blue sky, with dominant brown/gray and green tones.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture16_HankingWongBuilding1983.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture17-hkuengineeringstudentsinthailandtobuildasmallscalehydropowersystemforaruralvillage",
+    "text": "A gallery-style display features a large printed photo of roughly twenty HKU engineering students gathered in a rural Thai setting, many wearing casual blues, greys and reds and posing with a tan dog in the foreground. Below the image a blue caption bar notes their project to build a small-scale hydropower system for a rural village, set against a teal backdrop with pale binary-code graphics.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture17_HKUEngineeringStudentsInThailandToBuildASmallScaleHydroPowerSystemForARuralVillage.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture18-25thanniversaryofdepartmentofindustrialandmanufacturingsystemsengineering",
+    "text": "A gallery-style display photo documents the 25th anniversary celebration of the Department of Industrial and Manufacturing Systems Engineering at the University of Hong Kong, featuring a purple commemorative banner against a wood-paneled stage. About a dozen formally dressed people stand on stage raising glasses, while the foreground shows a table with a vintage computer monitor, microphones and silver-wrapped potted plants with red flowers on white tablecloths.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture18_25thAnniversaryOfDepartmentOfIndustrialAndManufacturingSystemsEngineering.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture19-projectmingde",
+    "text": "A gallery-style display features a single large photograph of a community project with about a dozen people in sun hats shoveling and moving dirt with wheelbarrows. The scene is dominated by earthy browns of the soil and bright sky blues, with prominent white and beige hats and a teal mounting background.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture19_ProjectMingde.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture1-peelengineeringlaboratory1934",
+    "text": "A gallery-style display holds a single large black-and-white photograph of the Peel Engineering Laboratory from 1934 mounted on a teal background. The image shows a two-story industrial building with tall windows and columned facades, a stone boundary wall, a nearby chimney and a curved road, with a small blue caption beneath.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture1_PeelEngineeringLaboratory1934.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture20-junkyardchallengeforfreshmanofdepartmentofmechanicalengineering2000-2001",
+    "text": "A gallery-style display photograph from the 2000–2001 Junkyard Challenge shows roughly 15–20 Mechanical Engineering freshmen clustered around a homemade wooden-and-metal contraption on brick paving. The scene includes bright clothing in blue, orange and gray tones and a blue caption panel below identifying the Department of Mechanical Engineering Junkyard Challenge, 2000–2001.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture20_JunkyardChallengeForFreshmanOfDepartmentOfMechanicalEngineering2000-2001.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture21-laboratoryofmechanicalengineering",
+    "text": "A gallery-style display photograph shows two people in white lab coats operating a beige computer-controlled milling machine and its adjacent control console. The scene is set against a light-blue backdrop indicating a mechanical engineering laboratory, with dominant whites, beiges and blues and two main figures focused on the equipment.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture21_LaboratoryOfMechanicalEngineering.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture22-chowyeichingbuilding1995",
+    "text": "A gallery-style display featuring the Chow Yei Ching Building (1995), a single multi-story structure clad in warm reddish-brown brick with a regular grid of rectangular windows and a glazed entrance canopy. The composition is angled and cropped, with a pale beige sky, light blue border elements, and trees visible at the building’s base.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture22_ChowYeiChingBuilding1995.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture23-industrialtrainingtotsinghuauniversity1994",
+    "text": "A gallery-style display features a large group photograph from an industrial training visit to Tsinghua University in 1994, showing around twenty young people posed on a paved courtyard in front of a beige multi-story building. Many participants wear light-colored shirts and jeans, with bags and cameras visible; the scene’s prominent colors are muted neutrals with touches of blue and green from signage and surrounding trees.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture23_IndustrialTrainingToTsinghuaUniversity1994.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture24-studentsconductedexperimentsintheenvironmentalbiotechnologylaboratory",
+    "text": "A gallery-style display with two photographs documenting work in an environmental biotechnology laboratory in 1999: the larger left image shows several students at a crowded lab bench using glassware, sinks, tubing, reagent bottles and notebooks, while the smaller right photo shows one student wearing a head-mounted device with an outstretched hand. The montage sits on a teal and blue graphic background with binary-code motifs and white caption text.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture24_StudentsConductedExperimentsInTheEnvironmentalBiotechnologyLaboratory.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture25-firstengineeringinnoshow2019",
+    "text": "A gallery-style display photograph capturing the First Engineering Innovation Show in 2019, with around thirty people posed outdoors in front of a brick-clad building. Several participants hold brightly colored \"WINNER\" placards, a small black robot marked with the number 3 sits on the reddish brick pavement in the foreground, and blue tents and mixed business-casual attire add pops of color.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture25_FirstEngineeringInnoShow2019.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture26-chequepresentationceremony2017",
+    "text": "A gallery-style display photograph showing a cheque presentation ceremony from 2017 with six people (five standing and one seated) gathered around a large yellow-and-white ceremonial cheque. The oversized cheque is made out to The University of Hong Kong for One Hundred Million (HK$100,000,000), set against warm wood-paneled doors, neutral beige walls, dark suits and a blue caption panel reading \"Cheque Presentation Ceremony, 2017.\"",
+    "source": "self_taken_photo",
+    "image": "gallerypicture26_ChequePresentationCeremony2017.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture27-sitevisittotamwingfaninnovationwing2020",
+    "text": "A gallery-style display photo showing a group of about 15 people posing inside the Tam Wing Fan Innovation Wing during a 2020 site visit. The modern white-and-blue interior features geometric accents, and many seated and standing participants hold white hard hats while one person is in a wheelchair.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture27_SiteVisitToTamWingFanInnovationWing2020.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture28-dedicationceremonyfortamwingfaninnovationwing2018",
+    "text": "A gallery-style display showing three large group photographs from the 2018 dedication ceremony for the Tam Wing Fan Innovation Wing. The images feature many formally dressed attendees posed in front of a Faculty of Engineering backdrop, with wheelchairs and a red carpet visible and dominant white, blue and red tones.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture28_DedicationCeremonyForTamWingFanInnovationWing2018.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture29-plaqueunveilingatopeningceremonyfortamwingfaninnovationwing2020",
+    "text": "A gallery-style display photograph captures the plaque unveiling at the opening ceremony for the Tam Wing Fan Innovation Wing in 2020, showing seven people—six standing and one seated in a wheelchair—posed beneath a mounted commemorative plaque. The group wears formal dark suits and floral boutonnieres, set against a blue and purple backdrop with historical photos and information panels.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture29_PlaqueUnveilingAtOpeningCeremonyForTamWingFanInnovationWing2020.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture2-allequipmentsinpeelengineeringlaboratorywasgoneduringtheworldwar2",
+    "text": "A gallery-style display features one large black-and-white photograph mounted on a pale blue panel with a navy caption strip noting that equipment from the Peel Engineering Laboratory was gone during World War II. The photograph shows an empty industrial interior with tall square support columns, many multi-pane windows letting in bright light, and scattered crates and remnants where machinery once stood.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture2_AllEquipmentsInPeelEngineeringLaboratoryWasGoneDuringTheWorldWar2.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture30-engineeringinnoshow2020",
+    "text": "A gallery-style display photo labeled for the Engineering Innovation Show 2020 depicts seven people gathered around a long light-wood demo table in a bright, modern lab. The table holds a laptop, colored display cards, a hand-sanitizer pump and a blue container, set against white cabinets, teal accents and black stools in the background.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture30_EngineeringInnoShow2020.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture31-inauguralinnosharing2021",
+    "text": "A gallery-style display poster promoting the inaugural InnoSharing event in 2021 titled \"Making Impact in a Technology-Driven World — My Leadership Journey in Academia\" shows two suited speakers seated on stage. The composition features two main figures flanking a small round table with a potted plant, set against a pale blue backdrop with bold purple text.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture31_InauguralInnoSharing2021.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture32-openingceremonyfortamwingfaninnovationwing2020",
+    "text": "A gallery-style display of three framed photographs documenting the Tam Wing Fan Innovation Wing opening ceremony in 2020, including a large group portrait, a smaller group shot, and a presentation photo. The scenes feature formally dressed attendees against blue, white and green backdrops with University of Hong Kong and Faculty of Engineering logos, several people wearing face masks and giving thumbs-up, and ceremonial props such as a bell and an oversized cheque/board.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture32_OpeningCeremonyForTamWingFanInnovationWing2020.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture33-donationfromphilomathiafoundationinsupportofinnovationacademy2021",
+    "text": "A gallery-style display photo from 2021 showing nine people standing in front of a blue Innovation Academy backdrop, most wearing dark suits with two women in teal and navy. The group holds an oversized ceremonial check and a round award plaque, commemorating a donation by the Philomathia Foundation in support of the Innovation Academy.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture33_DonationFromPhilomathiaFoundationInSupportOfInnovationAcademy2021.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture34-donationfrommrsmaytaminsupportofinnovationacademy",
+    "text": "A gallery-style display photograph shows two people holding an open certificate in a blue folder; one person wears a dark jacket and the other a light green top. The backdrop features large yellow \"Innovation Academy\" text with smaller white wording for the Faculty of Engineering, and a side caption notes a donation in support of the Innovation Academy (2021).",
+    "source": "self_taken_photo",
+    "image": "gallerypicture34_DonationFromMrsMayTamInSupportOfInnovationAcademy.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture35-techtalk-professoryuguoli",
+    "text": "A gallery-style display photo of a tech talk titled for Professor Yuguo Li shows a speaker standing by a blue directional sign addressing about a dozen seated attendees. The room has gray flooring and glass partitions, with a foreground laptop and water bottle and most people wearing dark clothing and face masks.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture35_TechTalk-ProfessorYuguoLi.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture37-techtalk-professornormanc-tien",
+    "text": "A gallery-style display features a printed poster of a tech talk showing a single suited speaker gesturing in front of a blue and purple digital backdrop. The lower panel reads \"Tech Talk\" with a professor's name on the placard, and prominent colors are blue, purple and white; the speaker wears a dark suit, tie and face mask while gesturing with both hands.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture37_TechTalk-ProfessorNormanC.Tien.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture38-innohubkick-offevent2021",
+    "text": "A gallery-style display features a large group photograph from the InnoHub kick-off event in 2021, showing about 30 people seated and standing on tiered steps, many wearing masks, holding small placards, and giving thumbs-up. The poster uses prominent blue and purple tones with dark suits and a light background, and smaller images are visible beneath the main photo.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture38_InnoHubKick-OffEvent2021.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture3-wartimegraduates-civilengineeringgraduateswithprof-f-a-thendean-seatedcentre",
+    "text": "A gallery-style display features a sepia-toned wartime group portrait of nine civil engineering graduates in dark suits seated and standing in front of a stone building and wooden door. A navy caption strip below names the group and notes Prof F. A. Redmond seated at the centre.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture3_WarTimeGraduates_CivilEngineeringGraduatesWithProf_F.A._ThenDean_SeatedCentre.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture4-insidethenewlybuiltpeelengineeringlaboratory1935",
+    "text": "A gallery-style display shows a black-and-white 1935 photograph of the newly built Peel Engineering Laboratory interior. The image features one large central A-frame hoist or gantry, several support columns, rows of multi-paned windows, and workbenches and machinery with a handful of workers visible.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture4_InsideTheNewlyBuiltPeelEngineeringLaboratory1935.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture5-machinerybeingloadedintothepeelengineeringlaboratory",
+    "text": "A gallery-style display features a sepia-toned photograph of a large cylindrical piece of machinery being loaded onto a flatbed or truck near palm trees, with about five workers and coiled rope visible. Captions note the equipment was loaded into the Peel Engineering Laboratory in 1934 and reference the newly built laboratory in 1935.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture5_MachineryBeingLoadedIntoThePeelEngineeringLaboratory.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture6-drawingofficeinsidethepeelengineeringlaboratory",
+    "text": "A gallery-style display shows a historic black-and-white photograph of the drawing office inside the Peel Engineering Laboratory. The wide room contains dozens of wooden drafting tables arranged in rows, a few staff working among the tables, and multiple windows casting light across the gray, sepia-toned scene.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture6_DrawingOfficeInsideThePeelEngineeringLaboratory.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture7-prof-f-a-redmond-deanofengineering1925-26-1928-1930-1932-1939-50-returnedtorestartengineeringbeforethewarbrokeout",
+    "text": "A gallery-style display features a sepia/black-and-white group photograph of nine figures in academic gowns and caps, one seated centrally with eight standing behind. A blue caption strip beneath the image lists a dean’s multiple terms (1925–26, 1928, 1930, 1932, 1939–50) and notes a return to restart the engineering school before the war broke out.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture7_Prof_F.A._Redmond(DeanOfEngineering1925-26_1928_1930_1932_1939-50)ReturnedToRestartEngineeringBeforeTheWarBrokeOut.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture8-theduncanslossschoolofengineeringandarchitecture",
+    "text": "A gallery-style display features a large sepia-toned photograph of the Duncan Sloss School of Engineering and Architecture dated 1950, depicting a three-story façade with numerous multi-paned windows and a central entrance. The single prominent image is mounted on a pale blue panel, with warm brown tones dominating the historic print.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture8_TheDuncanSlossSchoolOfEngineeringAndArchitecture.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture9-handsonproblemsolving",
+    "text": "A gallery-style display features a sepia-toned photograph of five young men clustered around a large industrial machine or lathe, actively working with hand tools. The muted grayscale image is mounted on a teal-blue background and includes a small caption highlighting hands-on problem solving.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture9_HandsOnProblemSolving.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/makerspace-a",
-    "text": "This space reads like Makerspace A in HKU InnoWings: an open, flexible workshop with multiple large mobile workbenches and high stools, ceiling-mounted power drops, and floor-to-ceiling windows for natural light. A pair of large display panels/monitors on stands and plentiful under-bench storage and cabinets line the perimeter, while a bank of enclosed fabrication machines (likely desktop 3D printers) sits along the rear bench. The layout and equipment support hands-on prototyping, group projects, workshops, demonstrations and pop-up events where teams can design, iterate and present ideas. Students focused on innovation, making or entrepreneurship can use this area for rapid prototyping, collaborative design work and small-scale fabrication.",
+    "text": "A bright industrial-style makerspace filled with about eight large light-wood worktables surrounded by numerous black stools. White rectangular overhead lights, large green-framed windows, several monitors, workbench cabinets along the walls, and a pale gray floor complete the clean, functional workspace.",
     "source": "self_taken_photo",
     "image": "makerspace_A.jpeg",
     "image_type": "self_taken_photo"

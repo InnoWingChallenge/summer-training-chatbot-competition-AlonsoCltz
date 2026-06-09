@@ -35,7 +35,7 @@ def _image_to_data_url(path: str) -> str:
 
 _DEFAULT_PROMPT = (
     "Please provide a concise description of the above image in 2-3 sentences. "
-    "Mention visible objects, prominent colors, and the overall mood. "
+    "Mention visible objects, prominent colors, and number of each main items (ex if the picture is full of tables, mention how many tables are there). "
     "Return only the description text."
 )
 
@@ -43,6 +43,7 @@ _DEFAULT_PROMPT = (
 def describe_image(
     image_path: Optional[str] = None,
     image_url: Optional[str] = None,
+    image_title: Optional[str] = None,
     model: Optional[str] = None,
     prompt: Optional[str] = None,
 ) -> str:
@@ -54,6 +55,21 @@ def describe_image(
         model:      Override the default vision model (AZURE_OPENAI_VISION_MODEL).
         prompt:     Override the default description prompt.
     """
+
+    prompt = f"""
+    Please provide a concise description of the image in 2-3 sentences.
+
+    The image title is: "{image_title}".
+    The title will provide hints of what's going on in the photos, mention keyword names, years, etc in your description.
+    The title may be complicated with multiple keywords using capital letters to split, make not to direct copy and paste to your response.
+    Important wording rules:
+    - If the title contains "gallery", describe it as "a gallery" or "gallery-style display".
+    - Do not say "it looks like a gallery wall".
+    - Avoid uncertain phrases like "looks like", "appears to be", or "seems to be" unless necessary.
+    - Mention visible objects, prominent colors, and the number of main items if clear.
+    - Return only the description text.
+    """
+
     active_model = model or VISION_MODEL
     active_prompt = prompt or _DEFAULT_PROMPT
 
