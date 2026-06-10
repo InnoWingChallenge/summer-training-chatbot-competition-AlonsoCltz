@@ -558,9 +558,219 @@
   },
   {
     "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/makerspace-a",
-    "text": "A bright industrial-style makerspace filled with about eight large light-wood worktables surrounded by numerous black stools. White rectangular overhead lights, large green-framed windows, several monitors, workbench cabinets along the walls, and a pale gray floor complete the clean, functional workspace.",
+    "text": "Makerspace A is filled with about eight large light-wood worktables surrounded by numerous black stools. White rectangular overhead lights, large green-framed windows, several monitors, workbench cabinets along the walls, and a pale gray floor complete the clean, functional workspace.",
     "source": "self_taken_photo",
     "image": "makerspace_A.jpeg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/pitching/",
+    "text": "Brainstormin\nTam\nF\n12.00 PM; Fc\nFinal Challe\nMar. 18, Apr.\nOPEN EVENT AREA\nNO HANDS-ON ACTIVITIES\nOR TOOL USE(NO CUTTERS;\nGLUL\nGLUE; MODEL-BUILDING,\nETC )\nPLEASE PROCCED TO\nMAKER SPACE A\nSTUDY\n(01\nGROUP DISCUSSION\nNO\nCOLLABORATIVE LEARNING\nFoR FURTHER INFORMATION, PLEASE CONTACT THE OFFICE\nWing",
+    "source": "image",
+    "image": "OpenEventAreaRule.jpg",
+    "image_type": "scraped_poster"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/pitching/",
+    "text": "FACULTY OF ENGINEERING.\n\nThe Faculty of Engineering comprises the following subjects:—\nMathematics, Pure and Applied : Physics : Chemistry : Civil Engineering,\nMechanical Engineering and Electrical Engineering.\n\nThe University confers the degree of B.Sc.ENG. in Civil, Mechanical or Electrical Engineering.\n\nStaff:\n\nTaikoo Professor, .................... C.A.M. Smith, M.Sc. M.I.Mech.E.\nLecturer on Machine Design, ..... A.G. Warren, B.Sc, A.M.I.E.E\nLecturer on Materials, .............. E.I. Surman, B.Sc.\nLecturer on Mathematics, ........ H.W. Turnbull, M.A.\nLecturer on Physics, ............... T.H. Matthewman, M.ENG., A.M.I.E.E\nLecturer on Chemistry, ............ A.C. Franklin, F.I.C.\nDemonstrator, ....................... Chan Wing To.\nElectrician, .......................... E. Pellow.\nWorkshop Instructor, .............. M.W. Hon.\nFitter, ................................. Tsang Poog.",
+    "source": "image",
+    "image": "gallerypicture41_TheFaculty'sFirstStaffList.jpg",
+    "image_type": "scraped_poster"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/pitching/",
+    "text": "Scheme of Study.\n\nThe following outline of the courses is given. For the first three years all engineering students take the same lectures and specialise in Civil, Mechanical or Electrical Engineering in their fourth year.\n\nFirst Year Course in Civil, Mechanical and Electrical Engineering.\nHours per week.\n\nMathematics, pure and applied 8\nEngineering Drawing and Design 4\nApplied Mechanics 2\nPhysics 7\nChemistry 5\n\nSecond Year Course in Civil, Mechanical and Electrical Engineering.\nHours per week.\n\nMachine Design (lectures) 2\nPrime Movers (lectures) 2\nPhysics and Electrical Engineering (lectures) 2\nMathematics, pure and applied 2\nApplied Mechanics 2\nDrawing Office Work 6\nPhysics Laboratory 4\nPrime Movers Laboratory 2\nMaterials Laboratory 2\n\nThird Year Course in Civil, Mechanical and Electrical Engineering.\nHours per week.\n\nStrength of Materials (lectures) 2\nDesign of Structures (lectures) 2\nPrime Movers (lectures) 2\nElectrical Technology (lectures) 2\nDrawing Office Work 6\nStrength of Materials Laboratory 4\nPrime Movers Laboratory 4\nElectrical Laboratory 4\n\nFourth Year Course in Mechanical Engineering.\nHours per week.\n\nMachine Design (lectures) 2\nElectrical Engineering (lectures) 2\nAdvanced Heat Engines (lectures) 2\nDrawing Office Work 10\nElectrical Engineering Laboratory 3\nHeat Engine Laboratory 4",
+    "source": "image",
+    "image": "gallerypicture42_TheSchemeOfStudyOfEngineering.jpg",
+    "image_type": "scraped_poster"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture36-techtalk-professorandersonh-c-shum-digitalizingdetectionbybreakingupbodyfluidssuchasbloodintomillionsandtrillionsofdroplets",
+    "text": "A gallery-style display panel dated 2021 shows a suited presenter standing before a dark slide with blue digital graphics. White slide text discusses digitizing detection by breaking up body fluids such as blood into millions and trillions of droplets (the word “blood” is highlighted in red), and several audience members are seated to the right.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture36_TechTalk-ProfessorAndersonH.C.Shum(DigitalizingDetectionByBreakingUpBodyFluidsSuchAsBloodIntoMillionsAndTrillionsOfDroplets).jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture39-mainbuildingcirca1912",
+    "text": "A gallery-style display shows a black-and-white historical photograph of a single large, ornate main building dated circa 1912, set against a mountainous backdrop. The multi-story classical structure has a prominent central tower and flanking turrets, tall colonnaded windows, a walkway leading to the entrance, and trees in the foreground; the photo is mounted on a bright blue display panel.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture39_MainBuildingCirca1912.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture40-engineeringfirstgraduate1916",
+    "text": "A gallery-style display featuring a sepia-toned group photograph of an engineering class and faculty at their first graduation in 1916, with over a dozen formally dressed individuals seated and standing in rows. The historic photo is mounted on a light gray-blue background and includes a small blue caption label noting the engineering first graduation, 1916.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture40_EngineeringFirstGraduate1916.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture43-profc-a-middletonsmith-thefirstdeanofengineering",
+    "text": "A gallery-style display featuring one framed black-and-white portrait mounted on a pale, patterned wall with a bold blue caption bar beneath. The white-lettered plaque names Professor C. A. Middleton Smith as the first Dean of Engineering, and the scene is dominated by muted grays and the prominent blue of the nameplate.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture43_ProfC.A.MiddletonSmith_TheFirstDeanOfEngineering.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture44-theelectricalmachinerylaboratorycirca1933",
+    "text": "A gallery-style display featuring a black-and-white photograph of an electrical machinery laboratory from circa 1933. The photo shows three tall cylindrical machines, extensive piping, gauges and heavy electrical equipment with several technicians clustered among them, mounted on a teal mat with a blue caption strip beneath.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture44_TheElectricalMachineryLaboratoryCirca1933.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture45-appliedmechanicslaboratorycirca1918",
+    "text": "A gallery-style display featuring a black-and-white photograph of an Applied Mechanics Laboratory circa 1918 mounted on a teal background. The image shows about seven people working at a long wooden workbench with six stools, vintage instruments, overhead pulleys, drawers, and a patterned tile floor.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture45_AppliedMechanicsLaboratoryCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture46-theelectricaltechnologylaboratorycirca1922",
+    "text": "A gallery-style display presents a black-and-white photograph of an electrical technology laboratory circa 1922. A long wooden workbench with several electrical instruments, papers and a globe-like device fills the foreground, while four seated figures are positioned against a wall with tall windows and doors above a patterned tile floor.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture46_TheElectricalTechnologyLaboratoryCirca1922.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture47-thirty-tontestingmachinecirca1918",
+    "text": "A gallery-style display shows a large black-and-white photograph of a thirty-ton testing machine from circa 1918, mounted on a teal panel with pale white linear accents. The vintage image centers on the heavy mechanical apparatus with four men standing around it and patterned tiled flooring visible beneath.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture47_Thirty-tonTestingMachineCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture48-steamandhydraulicslaboratoriescirca1922",
+    "text": "A gallery-style display features a large black-and-white photograph of the steam and hydraulics laboratories from around 1922, showing three connected masonry buildings set before a tree-lined hillside. The mounting is turquoise with a blue caption bar of white text, and the image is dominated by grayscale tones with architectural details like a two-story central section and arched windows.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture48_SteamAndHydraulicsLaboratoriesCirca1922.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture49-interiorofboilerhousecirca1918",
+    "text": "A gallery-style display showing a black-and-white interior photograph of a boiler house dated circa 1918. The image features two large industrial boilers with piping, a central furnace with a ladder leaning against it, an arched doorway at left and a stepped platform by machinery at right, mounted on a teal patterned background.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture49_InteriorOfBoilerHouseCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture50-partofhydrauliclaboratorycirca1918",
+    "text": "A gallery-style display features a black-and-white photograph of part of a hydraulic laboratory circa 1918, mounted on a teal background. The image shows several large cylindrical drive units and horizontal shafts spanning open pits, surrounded by railings, piping and brick workshop walls.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture50_PartOfHydraulicLaboratoryCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture51-thesteamlaboratorycirca1933",
+    "text": "A gallery-style display featuring two historic black-and-white photographs of a steam laboratory dated circa 1933. The images show industrial steam machinery and several technicians at work, set against a teal, map-patterned background with a blue caption bar; the predominant colors are teal, black, white and a small sepia strip.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture51_TheSteamLaboratoryCirca1933.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture52-engineeringsociety1923",
+    "text": "A gallery-style display shows a large black-and-white group photograph mounted on a turquoise mat. Dozens of men in dark suits and ties are posed in several rows in front of a colonial-style building with palm trees, identified as an engineering society group from 1923.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture52_EngineeringSociety1923.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture53-generalarchitecturalschemeforengineeringbuildings",
+    "text": "A gallery-style display features a large black-and-white architectural sketch dated 1923, showing a long classical elevation labeled New Engineering Faculty with flanking Peel Laboratory and Ho Tung Workshop. The detailed drawing is mounted on a muted teal and gray exhibition panel with a small blue label for the general architectural scheme for engineering buildings, giving the scene a restrained palette of gray, teal and black.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture53_GeneralArchitecturalSchemeForEngineeringBuildings.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture54-planofthepowerstationcirca1918",
+    "text": "A gallery-style display featuring a single large black-and-white plan of a power station from circa 1918 mounted on a light teal panel. The detailed hand-drawn schematic shows labeled components such as gas producers, engines and tanks, and a bold blue label beneath reads \"Plan of the Power Station, circa 1918.\"",
+    "source": "self_taken_photo",
+    "image": "gallerypicture54_PlanOfThePowerStationCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture55-swichboardinpowerhousecirca1918",
+    "text": "A gallery-style display shows a black-and-white photograph of a power house switchboard from circa 1918. The scene centers on a single large multi-section switchboard with numerous round gauges and control knobs mounted on a raised tiled platform with a metal railing, while several technicians sit and stand at desks nearby.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture55_SwichboardInPowerHouseCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture56-interiorofpowerhousecirca1918",
+    "text": "A gallery-style display showing the interior of a power house, circa 1918. The black-and-white photograph features a row of about five large stationary generators or steam engines mounted on white pedestals, with several workers posed among the machinery and a bright blue exhibition mat framing the historic print.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture56_InteriorOfPowerHouseCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture57-engineeringbuildingsin1920s",
+    "text": "A gallery-style display features a sepia-toned aerial photograph of engineering buildings from the 1920s. The image shows a long curved multi-story building joined to several rectangular structures on a steep hillside, mounted on a bright blue informational panel with white trim.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture57_EngineeringBuildingsIn1920s.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture58-partoftheheatenginelaboratorycirca1918",
+    "text": "A gallery-style display showing part of a heat engine laboratory, circa 1918, rendered in black-and-white. The workshop contains three large stationary engines with prominent flywheels, tall arched windows, and four men in early 20th-century dress attending the machinery.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture58_PartOfTheHeatEngineLaboratoryCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture59-electricalmaterialstestinglaboratorycirca1918",
+    "text": "A gallery-style display of a black-and-white photograph showing an electrical materials testing laboratory circa 1918, with several technicians gathered around large benches and test apparatus. The scene features a central worktable covered with instruments, window-side benches and equipment, a tall cabinet at the rear, and six men standing on a tiled floor.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture59_ElectricalMaterialsTestingLaboratoryCirca1918.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture60-anexperimenttofindyoung-smodulesofelasticitycirca1932",
+    "text": "A gallery-style display features a black-and-white photograph, circa 1932, documenting an experiment to determine Young’s modulus of elasticity. Two men stand behind a long workbench operating a vertical testing machine with stacked weights and tools; the image is mostly grayscale set against a teal mat and a dark blue caption bar.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture60_AnExperimentToFindYoung'sModulesOfElasticityCirca1932.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture61-cementtestingmachinecirca1932",
+    "text": "A gallery-style display features a vintage black-and-white photograph from circa 1932 showing three men gathered around a large cement testing machine. The grayscale image is mounted on a teal background with a blue caption bar, and the scene includes the heavy testing apparatus, a visible dial gauge, and a man holding a sheet of paper.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture61_CementTestingMachineCirca1932.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture62-drsunyat-sen-svisittohkuonfeb20-1923-takenoutsidethestrengthofmaterialslaboratory",
+    "text": "A gallery-style display of a black-and-white photograph documenting Dr Sun Yat-sen’s visit to HKU on Feb 20, 1923, taken outside the Strength of Materials Laboratory. Several dozen men in suits and hats are gathered in front of a stone building with a prominent palm tree, arranged in seated and standing rows for a formal group portrait.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture62_DrSunYat-sen'sVisitToHKUOnFeb20_1923_TakenOutsideTheStrengthOfMaterialsLaboratory.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture63-testingmachinecirca1932",
+    "text": "A gallery-style display featuring two black-and-white historical photographs mounted on a pale gray background with faint technical linework. The larger photograph shows two men operating a large vertical testing machine dated circa 1932, while the smaller inset depicts several workers around factory equipment; a small blue caption label repeats the testing machine and year.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture63_TestingMachineCirca1932.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture64-workingthe60-toncompressiontestingmachinecirca1932",
+    "text": "A gallery-style display photograph from circa 1932 showing two individuals posed beside a large 60‑ton compression testing machine. The black-and-white image highlights the tall mechanical press with visible levers and a handwheel, and a blue caption strip beneath identifies the subject and year.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture64_WorkingThe60-tonCompressionTestingMachineCirca1932.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture65-engineeringstudentsusingmillingmachineinworkshopcirca1925",
+    "text": "A gallery-style display features a large black-and-white photograph of an engineering workshop circa 1925. The image shows several milling machines and lathes, overhead belts and pulleys, tall white support columns, and a long wooden workbench beneath tall industrial windows, all rendered in high-contrast monochrome.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture65_EngineeringStudentsUsingMillingMachineInWorkshopCirca1925.jpg",
+    "image_type": "self_taken_photo"
+  },
+  {
+    "url": "https://innoacademy.engg.hku.hk/innowing/self-taken-photos/gallerypicture66-hotungengineeringworkshop1925",
+    "text": "A gallery-style display shows a single large black-and-white photograph of a two-story engineering workshop building dated 1925, with a printed caption referencing Ho Tung. The panel features a teal-blue background and is flanked by a silver metal support pole on the left and a white frame on the right.",
+    "source": "self_taken_photo",
+    "image": "gallerypicture66_HoTungEngineeringWorkshop1925.jpg",
     "image_type": "self_taken_photo"
   }
 ]
