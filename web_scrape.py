@@ -52,7 +52,7 @@ class WebScraper:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                           "(KHTML, like Gecko) Chrome/133.0 Safari/537.36"
         }
-        self.MAX_PAGES = 50          # Safety limit - increase if needed
+        self.MAX_PAGES = 200          # Safety limit - increase if needed
         self.DELAY = 0.5              # Seconds between requests (polite enough for this small site)
         self.visited: List[str] = []
         self.queue: List[str] = self.SEED_URLS[:]

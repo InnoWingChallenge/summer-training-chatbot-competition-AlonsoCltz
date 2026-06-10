@@ -1062,7 +1062,18 @@ def generate_rag_answers(questions):
     for question, answer in app.answer_questions(questions):
         results.append(answer)
     return results
+def rag_answer(questions):
+    """Compatibility helper for callers that already import generate_rag_answers."""
+    config = RAGConfig.from_env()
+    app = RAGApplication(config)
 
+    if not questions:
+        print("not funny jason")
+        return []
+    results = []
+    for question, answer in app.answer_questions([questions]):
+        results.append(answer)
+    return results
 
 if __name__ == "__main__":
     main()
