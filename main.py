@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 from dataclasses import dataclass
@@ -11,9 +12,8 @@ import chromadb
 import numpy as np
 from dotenv import load_dotenv
 from openai import AzureOpenAI
-from rank_bm25 import BM25Okapi                  # Added for BM25 keyword stream
-from sentence_transformers import CrossEncoder    # Added for Re-ranking
-import json
+from rank_bm25 import BM25Okapi
+from sentence_transformers import CrossEncoder
 
 
 @dataclass(frozen=True)
@@ -37,13 +37,16 @@ class RAGConfig:
     top_k: int
     max_context_chars: int
     temperature: float
-    
-    # --- New Retrieve-Wide Rerank-Narrow Hyperparameters ---
-    retrieval_top_k: int = 10      # Retrieve a wider candidate net (e.g., Top-10)
-    rrf_k: int = 60                # Smoothing constant for RRF list merging
-    rerank_threshold: float = 0.0  # Logit cutoff boundary for Cross-Encoder filtering
-    final_top_k: int = 3           # Chunks ultimately delivered to GPT
-    vector_threshold: float = 0
+
+    # Hybrid retrieval / reranking parameters
+    retrieval_top_k: int = 10
+    rrf_k: int = 60
+    rerank_threshold: float = 0.0
+    final_top_k: int = 3
+    vector_threshold: float = 0.0
+
+    # Multi-question planning parameters
+    max_sub_questions: int = 5
 
     @classmethod
     def from_env(cls) -> "RAGConfig":
@@ -77,6 +80,12 @@ class RAGConfig:
             top_k=int(os.getenv("RAG_TOP_K", "5")),
             max_context_chars=int(os.getenv("RAG_MAX_CONTEXT_CHARS", "12000")),
             temperature=float(os.getenv("RAG_TEMPERATURE", "0.2")),
+            retrieval_top_k=int(os.getenv("RAG_RETRIEVAL_TOP_K", "10")),
+            rrf_k=int(os.getenv("RAG_RRF_K", "60")),
+            rerank_threshold=float(os.getenv("RAG_RERANK_THRESHOLD", "0.0")),
+            final_top_k=int(os.getenv("RAG_FINAL_TOP_K", "3")),
+            vector_threshold=float(os.getenv("RAG_VECTOR_THRESHOLD", "0.0")),
+            max_sub_questions=int(os.getenv("RAG_MAX_SUB_QUESTIONS", "5")),
         )
 
     @staticmethod
@@ -100,9 +109,13 @@ class RetrievedDocument:
     def source_url(self) -> str:
         return str(self.metadata.get("url", "Unknown source"))
 
+    @property
+    def chunk_id(self) -> str:
+        return f"{self.metadata.get('url', 'unknown')}:{self.metadata.get('chunk_index', 'unknown')}"
+
 
 class AzureOpenAIService:
-    """Handles both query embeddings and final answer generation."""
+    """Handles query embeddings, question planning, and final answer generation."""
 
     def __init__(self, config: RAGConfig):
         self.config = config
@@ -125,27 +138,93 @@ class AzureOpenAIService:
         )
         return response.data[0].embedding
 
+    def decompose_question(
+        self,
+        question: str,
+        previous_questions: Optional[Sequence[str]] = None,
+    ) -> List[str]:
+        """
+        Split a complex question into retrieval-friendly sub-questions.
+
+        Example:
+        "who is the director of innowing and who is the first dean of engineering"
+        -> ["Who is the director of InnoWing?", "Who is the first Dean of Engineering?"]
+        """
+        system_prompt = (
+            "You are a query planner for a RAG chatbot. Split the user's question into the "
+            "smallest helpful standalone sub-questions needed for retrieval. If the question "
+            "asks about two entities/events/people, create one sub-question for each. If it asks "
+            "to compare two things, create sub-questions that retrieve the facts for item 1 and item 2, "
+            "plus one comparison sub-question only if useful. Keep each sub-question self-contained. "
+            "Do not answer the question. Return only a JSON array of strings."
+        )
+        history_text = self._format_previous_questions(previous_questions)
+        user_prompt = (
+            f"Previous questions:\n{history_text}\n\n"
+            f"Current question:\n{question}\n\n"
+            f"Return at most {self.config.max_sub_questions} sub-questions as JSON:"
+        )
+
+        try:
+            response = self.chat_client.chat.completions.create(
+                model=self.config.chat_model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+                temperature=0.0,
+            )
+            content = response.choices[0].message.content or ""
+            sub_questions = self._parse_json_string_list(content)
+        except Exception as exc:
+            print(f"[WARN] LLM question decomposition failed, using fallback splitter: {exc}")
+            sub_questions = []
+
+        if not sub_questions:
+            sub_questions = self._fallback_split_question(question)
+
+        cleaned: List[str] = []
+        seen = set()
+        for sub_q in sub_questions:
+            sub_q = re.sub(r"\s+", " ", sub_q).strip()
+            if not sub_q:
+                continue
+            key = sub_q.lower()
+            if key not in seen:
+                cleaned.append(sub_q)
+                seen.add(key)
+            if len(cleaned) >= self.config.max_sub_questions:
+                break
+
+        return cleaned or [question.strip()]
+
     def generate_answer(
         self,
         question: str,
         context: str,
         previous_questions: Optional[Sequence[str]] = None,
+        sub_questions: Optional[Sequence[str]] = None,
     ) -> str:
         system_prompt = (
             "You are a helpful assistant for HKU InnoWing and Innovation Academy. "
-            "Answer only using the provided context. The previous questions are only "
-            "there to help you understand follow-up questions such as 'it', 'they', or "
-            "'that programme'. If the context does not contain the answer, say you do "
-            "not have enough information. Keep the answer clear and concise."
-            "for image sources, there might be errors during OCR, fix the spelling if necessary."
+            "Answer only using the provided context. The previous questions are only there "
+            "to help you understand follow-up questions such as 'it', 'they', or 'that programme'. "
+            "The sub-questions show how the original question was broken down for retrieval. "
+            "Use the context from all sub-questions to answer the original question completely. "
+            "If the context answers only part of the question, answer that part and say which part "
+            "does not have enough information. If the context does not contain the answer at all, "
+            "say you do not have enough information. Keep the answer clear and concise. "
+            "For image sources, OCR may contain spelling mistakes, so fix obvious spelling if needed."
         )
 
         history_text = self._format_previous_questions(previous_questions)
+        sub_question_text = self._format_previous_questions(sub_questions) if sub_questions else "None"
         user_prompt = (
             f"Previous questions:\n{history_text}\n\n"
+            f"Retrieval sub-questions:\n{sub_question_text}\n\n"
             f"Context:\n{context}\n\n"
-            f"Current question:\n{question}\n\n"
-            "Answer:"
+            f"Original question:\n{question}\n\n"
+            "Final answer:"
         )
 
         response = self.chat_client.chat.completions.create(
@@ -157,6 +236,49 @@ class AzureOpenAIService:
             temperature=self.config.temperature,
         )
         return response.choices[0].message.content or ""
+
+    @staticmethod
+    def _parse_json_string_list(content: str) -> List[str]:
+        """Parse a JSON array of strings, including when wrapped in markdown fences."""
+        content = content.strip()
+        content = re.sub(r"^```(?:json)?\s*", "", content, flags=re.IGNORECASE)
+        content = re.sub(r"\s*```$", "", content)
+
+        # If the model adds text around the JSON, extract the first array.
+        match = re.search(r"\[.*\]", content, flags=re.DOTALL)
+        if match:
+            content = match.group(0)
+
+        value = json.loads(content)
+        if not isinstance(value, list):
+            return []
+        return [item for item in value if isinstance(item, str) and item.strip()]
+
+    @staticmethod
+    def _fallback_split_question(question: str) -> List[str]:
+        """Small rule-based backup splitter for common 'and' / comparison questions."""
+        q = question.strip()
+        lower = q.lower()
+
+        # Split patterns like: "who is X and who is Y", "what is X and what is Y"
+        repeated_wh = re.search(
+            r"\b(and|also)\s+(who|what|when|where|which|how|why)\b",
+            lower,
+        )
+        if repeated_wh:
+            parts = re.split(
+                r"\s+(?:and|also)\s+(?=(?:who|what|when|where|which|how|why)\b)",
+                q,
+                flags=re.IGNORECASE,
+            )
+            return [part.strip(" ?.!") + "?" for part in parts if part.strip()]
+
+        # For explicit comparisons, keep the original query because the LLM planner is better.
+        comparison_words = ["compare", "difference", "different", "similar", "versus", " vs "]
+        if any(word in lower for word in comparison_words):
+            return [q]
+
+        return [q]
 
     @staticmethod
     def _format_previous_questions(previous_questions: Optional[Sequence[str]]) -> str:
@@ -175,13 +297,12 @@ class ChromaRetriever:
         self.config = config
         self.client = chromadb.PersistentClient(path=str(config.chroma_path))
         self.collection = self._load_collection()
-        
-        # --- Build Accompanying BM25 Corpus Index ---
+
         print("Loading all database chunks to construct the BM25 Index...")
         all_data = self.collection.get(include=["documents", "metadatas"])
         self.all_documents = all_data["documents"] or []
         self.all_metadatas = all_data["metadatas"] or []
-        
+
         tokenized_corpus = [self._tokenize(doc) for doc in self.all_documents]
         self.bm25_index = BM25Okapi(tokenized_corpus)
         print(f"BM25 baseline set up over {len(self.all_documents)} chunks.")
@@ -196,60 +317,53 @@ class ChromaRetriever:
 
     @staticmethod
     def _tokenize(text: str) -> List[str]:
-        """Simple regex alphanumeric tokenizer conforming to guidelines."""
-        return re.findall(r'[a-z0-9]+', text.lower())
+        return re.findall(r"[a-z0-9]+", text.lower())
 
     def retrieve_hybrid_rrf(self, raw_question: str, query_embedding: List[float]) -> List[RetrievedDocument]:
-        """Runs Vector + BM25 parallel wide-searches, blending with Reciprocal Rank Fusion."""
+        """Runs Vector + BM25 wide searches, then blends them with Reciprocal Rank Fusion."""
         top_k = self.config.retrieval_top_k
 
-        # Stream 1: Wide Dense Vector Search
         vector_results = self.collection.query(
             query_embeddings=[query_embedding],
             n_results=top_k,
             include=["documents", "metadatas", "distances"],
         )
-        
+
         v_docs = vector_results.get("documents", [[]])[0]
         v_metas = vector_results.get("metadatas", [[]])[0]
         v_dists = vector_results.get("distances", [[]])[0]
 
-        vector_ranked = {}
+        vector_ranked: Dict[str, Dict[str, Any]] = {}
         for rank, (doc, meta, dist) in enumerate(zip(v_docs, v_metas, v_dists)):
-            # Establish a reliable dictionary identifier mapping unique chunks
-            chunk_id = meta.get("url", "unknown") + ":" + str(meta.get("chunk_index", rank))
+            chunk_id = f"{meta.get('url', 'unknown')}:{meta.get('chunk_index', rank)}"
             vector_ranked[chunk_id] = {
                 "rank": rank + 1,
                 "text": doc,
                 "meta": meta,
-                "vector_score": round(1 - dist, 4)
+                "vector_score": round(1 - dist, 4),
             }
 
-        # Stream 2: Wide Sparse BM25 Keyword Search
         query_tokens = self._tokenize(raw_question)
         bm25_scores = self.bm25_index.get_scores(query_tokens)
         top_bm25_indices = np.argsort(bm25_scores)[::-1][:top_k]
 
-        bm25_ranked = {}
+        bm25_ranked: Dict[str, Dict[str, Any]] = {}
         for rank, idx in enumerate(top_bm25_indices):
             meta = self.all_metadatas[idx]
-            chunk_id = meta.get("url", "unknown") + ":" + str(meta.get("chunk_index", idx))
+            chunk_id = f"{meta.get('url', 'unknown')}:{meta.get('chunk_index', idx)}"
             bm25_ranked[chunk_id] = {
                 "rank": rank + 1,
                 "text": self.all_documents[idx],
                 "meta": meta,
-                "bm25_score": round(float(bm25_scores[idx]), 4)
+                "bm25_score": round(float(bm25_scores[idx]), 4),
             }
 
-        # Step 3: Pool lists using Reciprocal Rank Fusion (RRF)
         all_chunk_ids = set(vector_ranked.keys()) | set(bm25_ranked.keys())
         fused_documents: List[RetrievedDocument] = []
-        
+
         for cid in all_chunk_ids:
             v_rank = vector_ranked.get(cid, {}).get("rank", top_k + 1)
             b_rank = bm25_ranked.get(cid, {}).get("rank", top_k + 1)
-            
-            # Reciprocal Formula: 1 / (k + rank)
             rrf_score = (1 / (self.config.rrf_k + v_rank)) + (1 / (self.config.rrf_k + b_rank))
             source_data = vector_ranked.get(cid) or bm25_ranked.get(cid)
 
@@ -259,13 +373,11 @@ class ChromaRetriever:
                     metadata=source_data["meta"],
                     vector_score=vector_ranked.get(cid, {}).get("vector_score", 0.0),
                     bm25_score=bm25_ranked.get(cid, {}).get("bm25_score", 0.0),
-                    rrf_score=round(rrf_score, 6)
+                    rrf_score=round(rrf_score, 6),
                 )
             )
 
-        # Sort combined results descending by calculated RRF score
         fused_documents.sort(key=lambda x: x.rrf_score, reverse=True)
-        
         return fused_documents[:top_k]
 
 
@@ -290,8 +402,11 @@ class ContextBuilder:
         used_chars = 0
 
         for index, document in enumerate(documents, start=1):
+            sub_question = document.metadata.get("retrieval_sub_question")
+            sub_question_line = f"Retrieved for: {sub_question}\n" if sub_question else ""
             part = (
                 f"[Source {index}]\n"
+                f"{sub_question_line}"
                 f"URL: {document.source_url}\n"
                 f"Content:\n{document.text.strip()}\n"
             )
@@ -309,7 +424,7 @@ class ContextBuilder:
 
 
 class RAGApplication:
-    """Coordinates wide hybrid retrieval, Cross-Encoder re-ranking, and final narrow generation."""
+    """Coordinates question decomposition, hybrid retrieval, reranking, and final generation."""
 
     def __init__(self, config: RAGConfig):
         self.config = config
@@ -317,8 +432,7 @@ class RAGApplication:
         self.retriever = ChromaRetriever(config)
         self.context_builder = ContextBuilder(config.max_context_chars)
         self.previous_questions: List[str] = []
-        
-        # --- Instantiate Local Transformer Reranker ---
+
         print("Loading local CPU Cross-Encoder ('ms-marco-MiniLM-L-6-v2')...")
         self.reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
         print("Reranker ready.")
@@ -333,69 +447,115 @@ class RAGApplication:
             raise ValueError("Question cannot be empty.")
 
         history = self.previous_questions if use_history else []
-        retrieval_query = self._build_retrieval_query(question, history)
 
-        # 1. Wide Retrieval: Embed and query via the Vector + BM25 Hybrid flow
-        query_embedding = self.openai_service.embed_query(retrieval_query)
-        candidates = self.retriever.retrieve_hybrid_rrf(question, query_embedding)
-        candidates = [
-            doc for doc in candidates
-            if doc.vector_score >= self.config.vector_threshold or doc.bm25_score > 0
-        ]
+        # 1. Plan: split one complex question into smaller retrieval questions.
+        sub_questions = self.openai_service.decompose_question(question, history)
+        print("\n[PLAN] Sub-questions:")
+        for index, sub_q in enumerate(sub_questions, start=1):
+            print(f"  {index}. {sub_q}")
 
-        if not candidates:
-            return "I do not have enough information to answer this question."
-
-        # 2. Narrow Re-ranking: Feed text pairs directly into Cross-Encoder
-        pairs = [(question, doc.text) for doc in candidates]
-        rerank_scores = self.reranker.predict(pairs)
-
-        reranked_docs = []
-        for doc, score in zip(candidates, rerank_scores):
-            # Map raw logits back to updated objects
-            updated_doc = RetrievedDocument(
-                text=doc.text,
-                metadata=doc.metadata,
-                vector_score=doc.vector_score,
-                bm25_score=doc.bm25_score,
-                rrf_score=doc.rrf_score,
-                rerank_score=float(score)
+        # 2. Retrieve and rerank independently for each sub-question.
+        all_context_docs: List[RetrievedDocument] = []
+        for sub_question in sub_questions:
+            retrieval_query = self._build_retrieval_query(sub_question, history)
+            docs_for_sub_question = self._retrieve_and_rerank(
+                retrieval_question=sub_question,
+                retrieval_query=retrieval_query,
             )
-            reranked_docs.append(updated_doc)
+            all_context_docs.extend(docs_for_sub_question)
 
-        # Sort candidates cleanly by Cross-Encoder logit scores
-        reranked_docs.sort(key=lambda x: x.rerank_score, reverse=True)
+        # 3. Deduplicate chunks across sub-questions while preserving best scores.
+        final_context_docs = self._deduplicate_documents(all_context_docs)
 
-        # 3. Confidence Level Guardrail Filter
-        # Logit values above 0.0 indicate semantic query satisfaction
-        filtered_docs = [
-            d for d in reranked_docs 
-            if d.rerank_score is not None and d.rerank_score >= self.config.rerank_threshold
-        ]
-
-        # Take strictly the targeted high-accuracy payload
-        final_context_docs = filtered_docs[:self.config.final_top_k]
-        for top_chunk in final_context_docs:
-            print(top_chunk)
-            print("="*20)
-        # Early execution exit if zero context items pass the logit check
         if not final_context_docs:
-            print("\n[GUARD] Warning: No context passed the validation threshold.")
+            if save_to_history:
+                self.previous_questions.append(question)
             return "I do not have enough information in my knowledge base to answer that question accurately."
 
-        # 4. Final Clean Context Synthesis
+        print("\n[FINAL CONTEXT CHUNKS]")
+        for top_chunk in final_context_docs:
+            print(top_chunk)
+            print("=" * 20)
+
+        # 4. Synthesize one final answer for the original question.
         context = self.context_builder.build(final_context_docs)
-        
         answer = self.openai_service.generate_answer(
             question=question,
             context=context,
             previous_questions=history,
+            sub_questions=sub_questions,
         )
 
         if save_to_history:
             self.previous_questions.append(question)
 
         return answer
+
+    def _retrieve_and_rerank(
+        self,
+        retrieval_question: str,
+        retrieval_query: str,
+    ) -> List[RetrievedDocument]:
+        """Retrieve documents for one sub-question, then rerank and filter them."""
+        query_embedding = self.openai_service.embed_query(retrieval_query)
+        candidates = self.retriever.retrieve_hybrid_rrf(retrieval_question, query_embedding)
+        candidates = [
+            doc for doc in candidates
+            if doc.vector_score >= self.config.vector_threshold or doc.bm25_score > 0
+        ]
+
+        if not candidates:
+            print(f"[RETRIEVE] No candidates for: {retrieval_question}")
+            return []
+
+        pairs = [(retrieval_question, doc.text) for doc in candidates]
+        rerank_scores = self.reranker.predict(pairs)
+
+        reranked_docs: List[RetrievedDocument] = []
+        for doc, score in zip(candidates, rerank_scores):
+            metadata = dict(doc.metadata)
+            metadata["retrieval_sub_question"] = retrieval_question
+            reranked_docs.append(
+                RetrievedDocument(
+                    text=doc.text,
+                    metadata=metadata,
+                    vector_score=doc.vector_score,
+                    bm25_score=doc.bm25_score,
+                    rrf_score=doc.rrf_score,
+                    rerank_score=float(score),
+                )
+            )
+
+        reranked_docs.sort(key=lambda x: x.rerank_score if x.rerank_score is not None else -999, reverse=True)
+        filtered_docs = [
+            doc for doc in reranked_docs
+            if doc.rerank_score is not None and doc.rerank_score >= self.config.rerank_threshold
+        ]
+
+        if not filtered_docs:
+            print(f"[GUARD] No context passed threshold for: {retrieval_question}")
+            # Fallback: keep the single best candidate, otherwise multi-part questions can fail too easily.
+            # If you want stricter behavior, remove this fallback.
+            return reranked_docs[:1]
+
+        return filtered_docs[:self.config.final_top_k]
+
+    def _deduplicate_documents(self, documents: Sequence[RetrievedDocument]) -> List[RetrievedDocument]:
+        """Keep only one copy of each chunk, preferring the highest rerank score."""
+        best_by_id: Dict[str, RetrievedDocument] = {}
+        for doc in documents:
+            current = best_by_id.get(doc.chunk_id)
+            doc_score = doc.rerank_score if doc.rerank_score is not None else -999.0
+            current_score = current.rerank_score if current and current.rerank_score is not None else -999.0
+            if current is None or doc_score > current_score:
+                best_by_id[doc.chunk_id] = doc
+
+        deduped = list(best_by_id.values())
+        deduped.sort(key=lambda x: x.rerank_score if x.rerank_score is not None else -999, reverse=True)
+
+        # Allow up to final_top_k chunks per sub-question, but still bounded.
+        max_docs = max(self.config.final_top_k, self.config.final_top_k * self.config.max_sub_questions)
+        return deduped[:max_docs]
 
     def answer_questions(self, questions: Sequence[str]) -> List[Tuple[str, str]]:
         answers: List[Tuple[str, str]] = []
